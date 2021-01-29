@@ -1,5 +1,5 @@
 Menu="NetworkServices"
 Type="xmenu"
 Title="VPN Manager"
-Icon="icon-wireguard"
+Icon="icon-vpn"
 Tabs="false"
