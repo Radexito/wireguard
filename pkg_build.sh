@@ -1,3 +1,3 @@
 #!/bin/bash
-cd source/upnp-monitor
-pkg_build.sh $1
+cd source/dynamix.wireguard || exit 1
+pkg_build.sh "$1"
