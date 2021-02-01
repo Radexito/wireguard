@@ -32,7 +32,7 @@ $hosts6 = implode(', ',$hosts6);
 $multi = file_exists("$docroot/webGui/include/Translations.php");
 
 function readConf(&$peer_wg,&$wg,$vtun) {
-  global $etc,$netbase,$netpool,$netbase6,$netpool6;
+  global $etc,$netbase,$netpool,$netbase6,$netpool6,$validIP4,$validIP6;
   $conf = "$etc/$vtun.conf";
   $cfg  = "$etc/$vtun.cfg";
   $file = $vpn = false;
@@ -90,6 +90,8 @@ function readConf(&$peer_wg,&$wg,$vtun) {
       }
     }
     $wg = array_merge($wg,$more);
+    $wg['EndpointIP4:0'] = (preg_match("/^$validIP4$/", $wg['Endpoint:0'])) ? $wg['Endpoint:0'] : (@dns_get_record($wg['Endpoint:0'], DNS_A)[0]['ip'] ?: '');
+    $wg['EndpointIP6:0'] = (preg_match("/^$validIP6$/", $wg['Endpoint:0'])) ? $wg['Endpoint:0'] : (@dns_get_record($wg['Endpoint:0'], DNS_AAAA)[0]['ipv6'] ?: '');
     list($subnet,$mask) = explode('/',$wg['Network:0']);
     list($subnet6,$mask6) = explode('/',$wg['Network6:0']);
     $netbase[$vtun] = ip2long($subnet) & (0x100000000-2**(32-$mask));
@@ -150,6 +152,19 @@ $netport['wg0']  = 51820;
 
 // read current configuration
 [$conf_wg0, $cfg_wg0, $this_wg0, $vpn_wg0] = readConf($peer_wg0, $wg0, 'wg0');
+
+$context = stream_context_create(['https'=>['timeout'=>12]]);
+$externalIP4 = @file_get_contents('https://api.ipify.org',false,$context) ?: '';
+$externalIP6 = @file_get_contents('https://api6.ipify.org',false,$context) ?: '';
+
+// gather IP addresses for likely endpoints
+$commonEndpointIPs = array();
+if ($externalIP4) array_push($commonEndpointIPs, $externalIP4);
+if ($externalIP6) array_push($commonEndpointIPs, $externalIP6);
+if ($eth0['IPADDR:0'])  array_push($commonEndpointIPs, $eth0['IPADDR:0']);
+if ($eth0['IPADDR6:0']) array_push($commonEndpointIPs, $eth0['IPADDR6:0']);
+if ($eth1 && $eth1['IPADDR:0'])  array_push($commonEndpointIPs, $eth1['IPADDR:0']);
+if ($eth1 && $eth1['IPADDR6:0']) array_push($commonEndpointIPs, $eth1['IPADDR6:0']);
 
 // remove obsolete tunnels
 foreach (glob("$docroot/webGui/WG[1-9]*.page",GLOB_NOSORT) as $wgX) {
@@ -1046,6 +1061,22 @@ Local endpoint:
   <input type="number" name="gui:ListenPort:0" class="port" min="1" max="65535" value="<?=$vpn_wg0?'':$wg0['ListenPort:0']?>" onchange="portRemark($(document.wg0),'wg0',this.value)" placeholder="<?=$vpn_wg0?'':$netport['wg0']?>"></span>
   <span class="remark" style="display:none">Remark: configure your router with port forwarding of port **<span id="my-port-wg0"><?=$wg0['ListenPort:0']?:$netport['wg0']?></span>/UDP** to **<?=$server?>**</span><span class="upnp wg0"></span>
   <input type="hidden" name="ListenPort:0" value="">
+<?php
+if ( ($wg0['PROT:0']=='' || $wg0['PROT:0']=='46') && $externalIP4 && $wg0['Endpoint:0'] ) {
+  if (!$wg0['EndpointIP4:0']) {
+    print("<span><br>Warning: The Local endpoint does not resolve to an IPv4 address. In most cases, this should be your public WAN IPv4: ".$externalIP4."</span>\n");
+  } elseif (!in_array($wg0['EndpointIP4:0'], $commonEndpointIPs) ) {
+    print("<span><br>Warning: The Local endpoint resolves to ".$wg0['EndpointIP4:0'].". In most cases, this should be your public WAN IPv4 instead: ".$externalIP4."</span>\n");
+  }
+}
+if ( ($wg0['PROT:0']=='6' || $wg0['PROT:0']=='46') && $externalIP6 && $wg0['Endpoint:0'] ) {
+  if (!$wg0['EndpointIP6:0']) {
+    print("<span><br>Warning: The Local endpoint does not resolve to an IPv6 address. In most cases, this should be your public WAN IPv6: ".$externalIP6."</span>\n");
+  } elseif (!in_array($wg0['EndpointIP6:0'], $commonEndpointIPs) ) {
+    print("<span><br>Warning: The Local endpoint resolves to ".$wg0['EndpointIP6:0'].". In most cases, this should be your public WAN IPv6 instead: ".$externalIP6."</span>\n");
+  }
+}
+?>
 
 > This field is automatically filled in with the public management domain name *www.&lt;hash&gt;.unraid.net* or the public address of the server.<br>
 > This allows VPN tunnels to be established from external peers to the server.<br>
@@ -1053,6 +1084,9 @@ Local endpoint:
 >
 > Users with a registered domain name can use this field to specify how their server is known on the Internet. E.g. www.myserver.mydomain.<br>
 > Again make sure your router is properly set up.
+>
+> Note to Cloudflare users: the Cloudflare proxy is designed for http traffic, it is not able to proxy VPN traffic. You must disable the Cloudflare proxy in order to use VPN with your domain.
+
 
 <div markdown="1" class="advanced wg0 zone0" style="display:none">
 Local server uses NAT:
