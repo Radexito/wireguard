@@ -3,14 +3,13 @@
 
 DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 MAINDIR=$(dirname "$(dirname "${DIR}")")
-tmpdir=/tmp/tmp.$(( RANDOM * 19318203981230 + 40 ))
+tmpdir=/tmp/tmp.$((RANDOM * 19318203981230 + 40))
 plugin=$(basename "${DIR}")
 version=$(date +"%Y.%m.%d")$1
 plgfile="${MAINDIR}/plugins/${plugin}.plg"
 txzfile="${MAINDIR}/archive/${plugin}.txz"
-#txzfile="${MAINDIR}/archive/${plugin}-${version}-x86_64-1.txz"
 
-# create txz package 
+# create txz package
 mkdir -p "$(dirname "${txzfile}")"
 mkdir -p "${tmpdir}"
 # shellcheck disable=SC2046
@@ -20,8 +19,10 @@ makepkg -l y -c y "${txzfile}"
 rm -rf "${tmpdir}"
 md5=$(md5sum "${txzfile}" | cut -f 1 -d ' ')
 echo "MD5: ${md5}"
+sha256=$(sha256sum "${txzfile}" | cut -f 1 -d ' ')
+echo "SHA256: ${sha256}"
 
-# test txz package 
+# test txz package
 mkdir -p "${tmpdir}"
 cd "${tmpdir}" || exit 1
 RET=$(explodepkg "${txzfile}" 2>&1 >/dev/null)
@@ -33,12 +34,13 @@ cd "${DIR}" || exit 1
 sed -i -E "s#(ENTITY name\s*)\".*\"#\1\"${plugin}\"#g" "${plgfile}"
 sed -i -E "s#(ENTITY version\s*)\".*\"#\1\"${version}\"#g" "${plgfile}"
 sed -i -E "s#(ENTITY MD5\s*)\".*\"#\1\"${md5}\"#g" "${plgfile}"
+sed -i -E "s#(ENTITY SHA256\s*)\".*\"#\1\"${sha256}\"#g" "${plgfile}"
 
 # add changelog for major versions
 # [[ -z "$1" ]] && sed -i "/<CHANGES>/a ###${version}\n" ${plgfile}
 
 echo
-grep -E "ENTITY (name|version|MD5)" "${plgfile}"
+grep -E "ENTITY (name|version|MD5|SHA256)" "${plgfile}"
 echo
 echo "plugin: ${plgfile}"
 echo "txz:    ${txzfile}"

@@ -1,12 +1,14 @@
 <?xml version="1.0" standalone="yes"?>
 <!DOCTYPE PLUGIN [
-<!ENTITY name "dynamix.wireguard">
-<!ENTITY author "limetech">
-<!ENTITY version "2021.02.01">
-<!ENTITY launch "Settings/VPNmanager">
+<!ENTITY name      "dynamix.wireguard">
+<!ENTITY launch    "Settings/VPNmanager">
+<!ENTITY author    "limetech">
+<!ENTITY version   "2021.02.03">
 <!ENTITY pluginURL "https://s3.amazonaws.com/dnld.lime-technology.com/&name;/&name;.plg">
-<!ENTITY source "/boot/config/plugins/&name;/&name;">
-<!ENTITY MD5 "204fc307ba2e61aa4f0fc6f9f2c43bf9">
+<!ENTITY source    "/boot/config/plugins/&name;/&name;">
+<!ENTITY MD5       "81e3aba61a191e639a4bf6eabd6bbd27">
+<!ENTITY SHA256    "f2f5c3fea06a703081ddb240f5d81c684aee3be2e2293c9fb0cac20530294f3e">
+
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-vpn" pluginURL="&pluginURL;" launch="&launch;" min="6.8.0-rc1" support="https://forums.unraid.net/topic/84229-dynamix-wireguard-vpn/?tab=comments#comment-780291">
   <CHANGES>
@@ -125,8 +127,8 @@ WireGuard allows to set up VPN tunnels for various requirements, such as remote 
   <FILE Run="/bin/bash">
     <INLINE>
 # Remove old 'source' packages
-MD5=$(md5sum &source;.txz 2&gt;/dev/null|grep -Po '^\S+')
-if [[ $MD5 != &MD5; ]]; then
+SHA256=$(sha256sum &source;.txz 2&gt;/dev/null|grep -Po '^\S+')
+if [[ $SHA256 != &SHA256; ]]; then
   rm -f &source;.txz
 fi
 
@@ -138,6 +140,7 @@ rm -f /usr/local/emhttp/webGui/WG*.page
   <FILE Name="&source;.txz" Run="upgradepkg --install-new --reinstall">
     <URL>https://s3.amazonaws.com/dnld.lime-technology.com/&name;/&name;.txz</URL>
     <MD5>&MD5;</MD5>
+    <SHA256>&SHA256;</SHA256>
   </FILE>
   <!-- POST-INSTALL SCRIPT -->
   <FILE Run="/bin/bash">
