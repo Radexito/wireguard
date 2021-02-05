@@ -221,7 +221,7 @@ Local tunnel address IPv6:
 Local endpoint:
 : <span class="input"><input type="text" name="Endpoint:0" class="subnet" value="<?=$vpn_wgX?'':$wgX['Endpoint:0']?>" onchange="lockEye($(document.wgX),0)" pattern="<?=$validText?>" title="IP address or FQDN" placeholder="<?=$vpn_wgX?'(not used)':preg_replace('/^(www\.).+(\.unraid.net)$/','$1<hash>$2',$public)?>">:
   <input type="number" name="gui:ListenPort:0" class="port" min="1" max="65535" value="<?=$vpn_wgX?'':$wgX['ListenPort:0']?>" onchange="portRemark($(document.wgX),'wgX',this.value)"  placeholder="<?=$vpn_wgX?'':$netport['wgX']?>"></span>
-  <span class="remark" style="display:none">Remark: configure your router with port forwarding of port **<span id="my-port-wgX"><?=$wgX['ListenPort:0']?:$netport['wgX']?></span>/UDP** to **<?=$server?>**</span><span class="upnp wgX"></span>
+  <span class="remark" style="display:none">Remark: configure your router with port forwarding of port **<span id="my-port-wgX"><?=$wgX['ListenPort:0']?:$netport['wgX']?></span>/UDP** to **<?=$server?>:<?=$wgX['ListenPort:0']?:$netport['wgX']?>**</span><span class="upnp wgX"></span>
   <input type="hidden" name="ListenPort:0" value="">
 <?php
 if ( ($wgX['PROT:0']=='' || $wgX['PROT:0']=='46') && $externalIP4 && $wgX['Endpoint:0'] ) {

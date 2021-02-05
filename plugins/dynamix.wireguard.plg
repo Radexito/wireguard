@@ -7,16 +7,18 @@
 <!ENTITY github    "unraid/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
-<!ENTITY MD5       "06f6f6ded0fea04888b638e348502deb">
-<!ENTITY SHA256    "a82456086286ae82d76bf7c8100589f4a64634001bbdd4db2193700020904930">
+<!ENTITY MD5       "4f639dae425184a0d87e78c88e76ff45">
+<!ENTITY SHA256    "330b378e4b9ad67755158ce61786b8083a0fd8c348fc41a2161c7e12f904c03a">
 
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-vpn" pluginURL="&pluginURL;" launch="&launch;" min="6.8.0-rc1" support="https://forums.unraid.net/topic/84229-dynamix-wireguard-vpn/?tab=comments#comment-780291">
   <CHANGES>
 ##&name;
 
-###2021.01.28
+###2021.02.05
 - move to unraid repo
+- change the plugin icon
+- validate the local endpoint
 
 ###2020.07.10
 - added multi-language handling
