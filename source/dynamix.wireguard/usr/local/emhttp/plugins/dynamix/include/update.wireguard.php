@@ -81,12 +81,29 @@ function createFiles($vtun) {
   global $etc,$peers,$name;
   $dir = "$etc/peers";
   if (!is_dir($dir)) mkdir($dir);
-  delPeer($vtun);
+  // delete old peer files that are no longer defined
+  foreach (glob("$dir/peer-$name-$vtun-*",GLOB_NOSORT) as $file) {
+    $pattern="#$dir/peer-$name-$vtun-(\d*).(png|conf)#m";
+    if (preg_match($pattern, $file, $matches)) {
+      $id=$matches[1];
+      if ($id && !$peers[$id]) {
+        unlink($file);
+      }
+    }
+  }
+  // create/update peer files if they have changed
   foreach ($peers as $id => $peer) {
     $cfg = "$dir/peer-$name-$vtun-$id.conf";
     $png = str_replace('.conf','.png',$cfg);
-    file_put_contents($cfg,implode("\n",$peer)."\n");
-    exec("qrencode -t PNG -r $cfg -o $png");
+    $cfgold = @file_get_contents($cfg) ?: '';
+    $cfgnew = implode("\n",$peer)."\n";
+    if ($cfgnew !== $cfgold) {
+      file_put_contents($cfg,$cfgnew);
+      @unlink($png);
+    }
+    if (!is_file($png)) {
+      exec("qrencode -t PNG -r $cfg -o $png");
+    }
   }
 }
 function parseInput(&$input,&$x) {
