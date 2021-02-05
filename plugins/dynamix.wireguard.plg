@@ -3,12 +3,12 @@
 <!ENTITY name      "dynamix.wireguard">
 <!ENTITY launch    "Settings/VPNmanager">
 <!ENTITY author    "limetech">
-<!ENTITY version   "2021.02.05b">
+<!ENTITY version   "2021.02.05c">
 <!ENTITY github    "unraid/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
-<!ENTITY MD5       "c1a17353318b3e374fa158f3ab528561">
-<!ENTITY SHA256    "614c0e69730a46961a453d1d58e6a1fcb940acbcb2381411a832f7ffd342e752">
+<!ENTITY MD5       "8f99b2dd113b45ac216cc8b69543e5a0">
+<!ENTITY SHA256    "07bc30b5699e3d717b6b40477c4c520f56aa90d333c13ddf49ce11b22da5ea61">
 
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-vpn" pluginURL="&pluginURL;" launch="&launch;" min="6.8.0-rc1" support="https://forums.unraid.net/topic/84229-dynamix-wireguard-vpn/?tab=comments#comment-780291">
@@ -19,6 +19,8 @@
 - move to unraid repo
 - change the plugin icon
 - validate the local endpoint
+- only update peer files that have actually changed
+- automatically make local/peer endpoint values lowercase
 
 ###2020.07.10
 - added multi-language handling

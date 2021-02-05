@@ -219,7 +219,7 @@ Local tunnel address IPv6:
 </div>
 </div>
 Local endpoint:
-: <span class="input"><input type="text" name="Endpoint:0" class="subnet" value="<?=$vpn_wgX?'':$wgX['Endpoint:0']?>" onchange="lockEye($(document.wgX),0)" pattern="<?=$validText?>" title="IP address or FQDN" placeholder="<?=$vpn_wgX?'(not used)':preg_replace('/^(www\.).+(\.unraid.net)$/','$1<hash>$2',$public)?>">:
+: <span class="input"><input type="text" name="Endpoint:0" class="subnet" value="<?=$vpn_wgX?'':$wgX['Endpoint:0']?>" onchange="toLC(this);lockEye($(document.wgX),0)" pattern="<?=$validText?>" title="IP address or FQDN" placeholder="<?=$vpn_wgX?'(not used)':preg_replace('/^(www\.).+(\.unraid.net)$/','$1<hash>$2',$public)?>">:
   <input type="number" name="gui:ListenPort:0" class="port" min="1" max="65535" value="<?=$vpn_wgX?'':$wgX['ListenPort:0']?>" onchange="portRemark($(document.wgX),'wgX',this.value)"  placeholder="<?=$vpn_wgX?'':$netport['wgX']?>"></span>
   <span class="remark" style="display:none">Remark: configure your router with port forwarding of port **<span id="my-port-wgX"><?=$wgX['ListenPort:0']?:$netport['wgX']?></span>/UDP** to **<?=$server?>:<?=$wgX['ListenPort:0']?:$netport['wgX']?>**</span><span class="upnp wgX"></span>
   <input type="hidden" name="ListenPort:0" value="">
@@ -379,7 +379,7 @@ Peer tunnel address IPv6:
 
 Peer endpoint:
 <input type="hidden" name="Endpoint:<?=$i?>" value="">
-: <span class="input"><input type="text" name="gui:Endpoint:<?=$i?>" class="subnet" value="<?=$wgX["Endpoint:$i"]?>" pattern="<?=$validText?>" title="IP address or FQDN" onchange="lockEye($(document.wgX),<?=$i?>)" <?=($vpn_wgX||(int)$wgX["TYPE:$i"]==2||(int)$wgX["TYPE:$i"]==3)?'placeholder="(mandatory)" required':'placeholder="(not used)"'?>>:
+: <span class="input"><input type="text" name="gui:Endpoint:<?=$i?>" class="subnet" value="<?=$wgX["Endpoint:$i"]?>" pattern="<?=$validText?>" title="IP address or FQDN" onchange="toLC(this);lockEye($(document.wgX),<?=$i?>)" <?=($vpn_wgX||(int)$wgX["TYPE:$i"]==2||(int)$wgX["TYPE:$i"]==3)?'placeholder="(mandatory)" required':'placeholder="(not used)"'?>>:
   <input type="number" name="gui:ListenPort:<?=$i?>" class="port" min="1" max="65535" value="<?=$wgX["ListenPort:$i"]?>" onchange="lockEye($(document.wgX),<?=$i?>)"<?=$wgX["Endpoint:$i"]?" placeholder=\"".($wgX['ListenPort:0']?:$netport['wgX'])."\"":""?>></span>
   <input type="button" class="form ping-button2-<?=$i?>" value="Ping" onclick="ping($(document.wgX),this,'input[name=&quot;gui:Endpoint:<?=$i?>&quot;]')"<?=$wgX["Endpoint:$i"]?'':' disabled'?>>
 
