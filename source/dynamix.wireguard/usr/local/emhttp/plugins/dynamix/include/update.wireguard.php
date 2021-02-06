@@ -224,10 +224,10 @@ case 'presharedkey':
   echo exec("wg genpsk");
   break;
 case 'update':
-  if (!exec("iptables -S|grep -om1 WIREGUARD")) {
+  if (!exec("iptables -S|grep -om1 'WIREGUARD$'")) {
     exec("iptables -N WIREGUARD;iptables -A FORWARD -j WIREGUARD");
   }
-  if (!exec("ip6tables -S|grep -om1 WIREGUARD")) {
+  if (!exec("ip6tables -S|grep -om1 'WIREGUARD$'")) {
     exec("ip6tables -N WIREGUARD;ip6tables -A FORWARD -j WIREGUARD");
   }
   $cfg  = $_POST['#cfg'];
