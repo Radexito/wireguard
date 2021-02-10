@@ -3,24 +3,29 @@
 <!ENTITY name      "dynamix.wireguard">
 <!ENTITY launch    "Settings/VPNmanager">
 <!ENTITY author    "limetech">
-<!ENTITY version   "2021.02.05d">
+<!ENTITY version   "2021.02.10">
 <!ENTITY github    "unraid/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
-<!ENTITY MD5       "e202d45a28067c259d0f6e688a15f1b8">
-<!ENTITY SHA256    "66243230b830adb75924c96134841cca55cae7a5d56b43ad71cd29220d51f036">
+<!ENTITY MD5       "a0127c6ee8153f45ddd6d87436220631">
+<!ENTITY SHA256    "adaf8b9bc7e8206993f958e0a6632ff1775b52678c6db1de986c5c077be8ddf3">
 
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-vpn" pluginURL="&pluginURL;" launch="&launch;" min="6.8.0-rc1" support="https://forums.unraid.net/topic/84229-dynamix-wireguard-vpn/?tab=comments#comment-780291">
   <CHANGES>
 ##&name;
 
-###2021.02.05
+###2021.02.10
 - move to unraid repo
 - change the plugin icon
 - validate the local endpoint
 - only update peer files that have actually changed
 - automatically make local/peer endpoint values lowercase
+- fix grep for iptables
+- "Local tunnel network pool" must be a network pool not a device IP
+- "Local tunnel network pool" cannot be the LAN pool
+- "Local tunnel address" and "Peer tunnel address" must be part of "Local tunnel network pool"
+- don't add peer if there are errors that would be propagated to the peer
 
 ###2020.07.10
 - added multi-language handling

@@ -157,7 +157,7 @@ Local name:
 : <span class="input"><input type="text" name="Name:0" class="wide" maxlength="99" value="<?=$wgX["Name:0"]?>" placeholder="(optional)"></span>
   <span class="pin"><i class="fa fa-fw fa-eye eye0<?=$this_wgX?'':' key-off'?>" style="cursor:pointer" onclick="WGconfig(this,'wgX','')" title="View Local Config"></i>
   <i class="fa fa-fw fa-key zone0<?=$wgX['PublicKey:0']?'':' key-off'?>" style="cursor:pointer" onclick="openClose($(document.wgX),null,'div.key0')" title="Toggle keys"></i>
-  <i class="fa fa-fw fa-chevron-down" style="cursor:pointer" onclick="openClose($(document.wgX),this,'div.zone0')" title="Toggle view"></i></span>
+  <i id="chevron-wgX-0" class="fa fa-fw fa-chevron-down" style="cursor:pointer" onclick="openClose($(document.wgX),this,'div.zone0')" title="Toggle view"></i></span>
 
 > Use this field to set a name for this connection and make it easily recognizable. The same name will appear in the configuration of any peers.
 
@@ -205,14 +205,14 @@ Local tunnel network pool IPv6:
 
 <div markdown="1" class="ipv4 wgX" style="display:none">
 Local tunnel address:
-: <span class="input"><input type="text" name="Address:0" class="subnet" maxlength="15" value="<?=$wgX['Address:0']?:long2ip($netbase['wgX']+1)?>" onchange="lockEye($(document.wgX),0)" pattern="<?=$validIP4?>" title="IPv4 address"></span>
+: <span class="input"><input type="text" name="Address:0" class="subnet" maxlength="15" value="<?=$wgX['Address:0']?:long2ip($netbase['wgX']+1)?>" onchange="verifyInSubnet(this);lockEye($(document.wgX),0)" pattern="<?=$validIP4?>" title="IPv4 address"></span>
 
 > This field is auto filled-in when a local tunnel network pool is created. It is allowed to overwrite the assignment, but this is normally not necessary. Use with care when changing manually.
 
 </div>
 <div markdown="1" class="ipv6 wgX" style="display:none">
 Local tunnel address IPv6:
-: <span class="input"><input type="text" name="Address6:0" class="subnet" maxlength="40" value="<?=$wgX['Address6:0']?:($netbase6['wgX'].'1')?>" onchange="lockEye($(document.wgX),0)" pattern="<?=$validIP6?>" title="IPv6 address"></span>
+: <span class="input"><input type="text" name="Address6:0" class="subnet" maxlength="40" value="<?=$wgX['Address6:0']?:($netbase6['wgX'].'1')?>" onchange="verifyInSubnet6(this);lockEye($(document.wgX),0)" pattern="<?=$validIP6?>" title="IPv6 address"></span>
 
 > This field is auto filled-in when a local tunnel network pool is created. It is allowed to overwrite the assignment, but this is normally not necessary. Use with care when changing manually.
 
@@ -364,13 +364,13 @@ Peer preshared key:
 <div markdown="1" class="advanced wgX zone<?=$i?>" style="display:none">
 <div markdown="1" class="ipv4 wgX" style="display:none">
 Peer tunnel address:
-: <span class="input"><input type="text" name="Address:<?=$i?>" class="subnet" maxlength="15" value="<?=$wgX["Address:$i"]?>" onchange="setAllow($(document.wgX),this.value,<?=$i?>)" pattern="<?=$validIP4?>" title="IPv4 address"></span>
+: <span class="input"><input type="text" name="Address:<?=$i?>" class="subnet" maxlength="15" value="<?=$wgX["Address:$i"]?>" onchange="if(verifyInSubnet(this)){setAllow($(document.wgX),this.value,<?=$i?>)}" pattern="<?=$validIP4?>" title="IPv4 address"></span>
   <input type="button" class="form ping-button1-<?=$i?>" value="Ping" onclick="ping($(document.wgX),this,'input[name=&quot;Address:<?=$i?>&quot;]')"<?=$wgX["Address:$i"]?'':' disabled'?>>
 
 </div>
 <div markdown="1" class="ipv6 wgX" style="display:none">
 Peer tunnel address IPv6:
-: <span class="input"><input type="text" name="Address6:<?=$i?>" class="subnet" maxlength="40" value="<?=$wgX["Address6:$i"]?>" onchange="setAllow6($(document.wgX),this.value,<?=$i?>)" pattern="<?=$validIP6?>" title="IPv6 address"></span>
+: <span class="input"><input type="text" name="Address6:<?=$i?>" class="subnet" maxlength="40" value="<?=$wgX["Address6:$i"]?>" onchange="if(verifyInSubnet6(this)){setAllow6($(document.wgX),this.value,<?=$i?>)}" pattern="<?=$validIP6?>" title="IPv6 address"></span>
   <input type="button" class="form ping-button6-<?=$i?>" value="Ping" onclick="ping($(document.wgX),this,'input[name=&quot;Address6:<?=$i?>&quot;]')"<?=$wgX["Address6:$i"]?'':' disabled'?>>
 
 </div>
@@ -470,13 +470,13 @@ Peer preshared key:
 <div markdown="1" class="advanced wgX zoneINDEX" style="display:none">
 <div markdown="1" class="ipv4 wgX" style="display:none">
 Peer tunnel address:
-: <span class="input"><input type="text" name="Address:INDEX" class="subnet" maxlength="15" value="" onchange="setAllow($(document.wgX),this.value,INDEX)" pattern="<?=$validIP4?>" title="IPv4 address"></span>
+: <span class="input"><input type="text" name="Address:INDEX" class="subnet" maxlength="15" value="" onchange="if(verifyInSubnet(this)){setAllow($(document.wgX),this.value,INDEX)}" pattern="<?=$validIP4?>" title="IPv4 address"></span>
   <input type="button" class="form ping-button1-INDEX" value="Ping" onclick="ping($(document.wgX),this,'input[name=&quot;Address:INDEX&quot;]')" disabled>
 
 </div>
 <div markdown="1" class="ipv6 wgX" style="display:none">
 Peer tunnel address IPv6:
-: <span class="input"><input type="text" name="Address6:INDEX" class="subnet" maxlength="40" value="" onchange="setAllow6($(document.wgX),this.value,INDEX)" pattern="<?=$validIP6?>" title="IPv6 address"></span>
+: <span class="input"><input type="text" name="Address6:INDEX" class="subnet" maxlength="40" value="" onchange="if(verifyInSubnet6(this)){setAllow6($(document.wgX),this.value,INDEX)}" pattern="<?=$validIP6?>" title="IPv6 address"></span>
   <input type="button" class="form ping-button6-INDEX" value="Ping" onclick="ping($(document.wgX),this,'input[name=&quot;Address6:INDEX&quot;]')" disabled>
 
 </div>
