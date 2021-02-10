@@ -3,12 +3,12 @@
 <!ENTITY name      "dynamix.wireguard">
 <!ENTITY launch    "Settings/VPNmanager">
 <!ENTITY author    "limetech">
-<!ENTITY version   "2021.02.10">
+<!ENTITY version   "2021.02.10a">
 <!ENTITY github    "unraid/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
-<!ENTITY MD5       "a0127c6ee8153f45ddd6d87436220631">
-<!ENTITY SHA256    "adaf8b9bc7e8206993f958e0a6632ff1775b52678c6db1de986c5c077be8ddf3">
+<!ENTITY MD5       "e984a6b0adb380d47ecd8d1989e79b8d">
+<!ENTITY SHA256    "6dad3e2d768b15bb3ac4dd4d0267d2b20a7a13699200890817e4bf9c03699cdf">
 
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-vpn" pluginURL="&pluginURL;" launch="&launch;" min="6.8.0-rc1" support="https://forums.unraid.net/topic/84229-dynamix-wireguard-vpn/?tab=comments#comment-780291">
@@ -26,6 +26,8 @@
 - "Local tunnel network pool" cannot be the LAN pool
 - "Local tunnel address" and "Peer tunnel address" must be part of "Local tunnel network pool"
 - don't add peer if there are errors that would be propagated to the peer
+- validate all fields onchange, not just onsubmit
+- validate format of Peer DNS server
 
 ###2020.07.10
 - added multi-language handling

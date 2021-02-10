@@ -195,7 +195,7 @@ Local tunnel network pool:
 Local tunnel network pool IPv6:
 <input type="hidden" name="Network6:0" value="">
 : <span class="input"><input type="text" name="gui:Network6:0" class="subnet" maxlength="40" value="<?=explode('/',$wgX['Network6:0'])[0]?>" onchange="setPool6($(document.wgX),'wgX')" pattern="<?=$validIP6?>" title="IPv6 network" placeholder="<?=$netpool6['wgX']?>">/
- <input type="number" name="gui:Mask6:0" class="mask" min="1" max="128" value="<?=explode('/',$wgX['Network6:0'])[1]?>" onchange="setPool6($(document.wgX),'wgX')" placeholder="64"></span>
+ <input type="number" name="gui:Mask6:0" class="mask" min="1" max="128" value="<?=explode('/',$wgX['Network6:0'])[1]?>" onchange="quickValidate(this);setPool6($(document.wgX),'wgX')" placeholder="64"></span>
 
 </div>
 > WireGuard tunnels need an internal IP address. Assign a network pool using the default IPv4 network <?=$netpool['wgX']?>/24 or
@@ -219,8 +219,8 @@ Local tunnel address IPv6:
 </div>
 </div>
 Local endpoint:
-: <span class="input"><input type="text" name="Endpoint:0" class="subnet" value="<?=$vpn_wgX?'':$wgX['Endpoint:0']?>" onchange="toLC(this);lockEye($(document.wgX),0)" pattern="<?=$validText?>" title="IP address or FQDN" placeholder="<?=$vpn_wgX?'(not used)':preg_replace('/^(www\.).+(\.unraid.net)$/','$1<hash>$2',$public)?>">:
-  <input type="number" name="gui:ListenPort:0" class="port" min="1" max="65535" value="<?=$vpn_wgX?'':$wgX['ListenPort:0']?>" onchange="portRemark($(document.wgX),'wgX',this.value)"  placeholder="<?=$vpn_wgX?'':$netport['wgX']?>"></span>
+: <span class="input"><input type="text" name="Endpoint:0" class="subnet" value="<?=$vpn_wgX?'':$wgX['Endpoint:0']?>" onchange="toLC(this);quickValidate(this);lockEye($(document.wgX),0)" pattern="<?=$validText?>" title="IP address or FQDN" placeholder="<?=$vpn_wgX?'(not used)':preg_replace('/^(www\.).+(\.unraid.net)$/','$1<hash>$2',$public)?>">:
+  <input type="number" name="gui:ListenPort:0" class="port" min="1" max="65535" value="<?=$vpn_wgX?'':$wgX['ListenPort:0']?>" onchange="quickValidate(this);portRemark($(document.wgX),'wgX',this.value)"  placeholder="<?=$vpn_wgX?'':$netport['wgX']?>"></span>
   <span class="remark" style="display:none">Remark: configure your router with port forwarding of port **<span id="my-port-wgX"><?=$wgX['ListenPort:0']?:$netport['wgX']?></span>/UDP** to **<?=$server?>:<?=$wgX['ListenPort:0']?:$netport['wgX']?>**</span><span class="upnp wgX"></span>
   <input type="hidden" name="ListenPort:0" value="">
 <?php
@@ -275,7 +275,7 @@ Local gateway uses UPnP:
 
 </div>
 Local tunnel firewall:
-: <span class="input"><input type="text" name="DROP:0" class="wide" value="<?=$wgX['DROP:0']?>" onchange="lockEye($(document.wgX),0)" pattern="<?=$validList?>" title="IPv4/IPv6 hosts and subnets" placeholder="(optional)"></span>
+: <span class="input"><input type="text" name="DROP:0" class="wide" value="<?=$wgX['DROP:0']?>" onchange="quickValidate(this);lockEye($(document.wgX),0)" pattern="<?=$validList?>" title="Comma separated list of IPv4 and IPv6 IP addresses, CIDR optional" placeholder="(optional)"></span>
   Rule: <select name="RULE:0" size="1" class="auto">
   <?=mk_option($wgX['RULE:0'], "", "Deny")?>
   <?=mk_option($wgX['RULE:0'], "1", "Allow")?>
@@ -287,7 +287,7 @@ Local tunnel firewall:
 > Use a comma as separator when more than one IP address is entered.
 
 MTU size:
-: <span class="input"><input type="number" name="MTU:0" class="trim" min="68" max="9198" value="<?=$wgX['MTU:0']?>" onchange="lockEye($(document.wgX),0)" placeholder="(automatic)">bytes</span>
+: <span class="input"><input type="number" name="MTU:0" class="trim" min="68" max="9198" value="<?=$wgX['MTU:0']?>" onchange="quickValidate(this);lockEye($(document.wgX),0)" placeholder="(automatic)">bytes</span>
 
 > Leave this to the default automatic mode to select the MTU size. This MTU size is common for all peer connections.
 
@@ -314,7 +314,7 @@ DNS servers:
 <?foreach ($peer_wgX as $i):?>
 <div markdown="1" id="index-wgX-<?=$i?>" class="shade-<?=$display['theme']?>">
 Peer name:
-: <span class="input"><input type="text" name="Name:<?=$i?>" class="wide" maxlength="99" value="<?=$wgX["Name:$i"]?>" onchange="lockEye($(document.wgX),<?=$i?>)" placeholder="(optional)"></span>
+: <span class="input"><input type="text" name="Name:<?=$i?>" class="wide" maxlength="99" value="<?=$wgX["Name:$i"]?>" onchange="quickValidate(this);lockEye($(document.wgX),<?=$i?>)" placeholder="(optional)"></span>
   <input type="button" class="form advanced zone<?=$i?>" style="display:none" value="Delete Peer" onclick="delPeer($(document.wgX),'#index-wgX-<?=$i?>')">
   <span class="pin"><i class="fa fa-fw fa-eye eye<?=$i?><?=(file_exists("$etc/peers/peer-$tower-wgX-$i.conf")&&(int)$wgX["TYPE:$i"]!=7)?'':' key-off'?>" style="cursor:pointer" onclick="WGconfig(this,'peer-<?=$tower?>-wgX-<?=$i?>','/peers')" title="View Peer Config"></i>
   <i class="fa fa-fw fa-key zone<?=$i?><?=$wgX["PublicKey:$i"]?'':' key-off'?>" style="cursor:pointer" onclick="openClose($(document.wgX),null,'div.key<?=$i?>')" title="Toggle keys"></i>
@@ -379,8 +379,8 @@ Peer tunnel address IPv6:
 
 Peer endpoint:
 <input type="hidden" name="Endpoint:<?=$i?>" value="">
-: <span class="input"><input type="text" name="gui:Endpoint:<?=$i?>" class="subnet" value="<?=$wgX["Endpoint:$i"]?>" pattern="<?=$validText?>" title="IP address or FQDN" onchange="toLC(this);lockEye($(document.wgX),<?=$i?>)" <?=($vpn_wgX||(int)$wgX["TYPE:$i"]==2||(int)$wgX["TYPE:$i"]==3)?'placeholder="(mandatory)" required':'placeholder="(not used)"'?>>:
-  <input type="number" name="gui:ListenPort:<?=$i?>" class="port" min="1" max="65535" value="<?=$wgX["ListenPort:$i"]?>" onchange="lockEye($(document.wgX),<?=$i?>)"<?=$wgX["Endpoint:$i"]?" placeholder=\"".($wgX['ListenPort:0']?:$netport['wgX'])."\"":""?>></span>
+: <span class="input"><input type="text" name="gui:Endpoint:<?=$i?>" class="subnet" value="<?=$wgX["Endpoint:$i"]?>" pattern="<?=$validText?>" title="IP address or FQDN" onchange="toLC(this);quickValidate(this);lockEye($(document.wgX),<?=$i?>)" <?=($vpn_wgX||(int)$wgX["TYPE:$i"]==2||(int)$wgX["TYPE:$i"]==3)?'placeholder="(mandatory)" required':'placeholder="(not used)"'?>>:
+  <input type="number" name="gui:ListenPort:<?=$i?>" class="port" min="1" max="65535" value="<?=$wgX["ListenPort:$i"]?>" onchange="quickValidate(this);lockEye($(document.wgX),<?=$i?>)"<?=$wgX["Endpoint:$i"]?" placeholder=\"".($wgX['ListenPort:0']?:$netport['wgX'])."\"":""?>></span>
   <input type="button" class="form ping-button2-<?=$i?>" value="Ping" onclick="ping($(document.wgX),this,'input[name=&quot;gui:Endpoint:<?=$i?>&quot;]')"<?=$wgX["Endpoint:$i"]?'':' disabled'?>>
 
 > When this field is left empty, the server operates in *passive mode* to establish the tunnel. It must be the peer which starts the tunnel.
@@ -390,18 +390,18 @@ Peer endpoint:
 > *Note: this field is mandatory for "server-to-server" and "LAN-to-LAN" connections*
 
 Peer allowed IPs:
-: <span class="input"><input type="text" name="AllowedIPs:<?=$i?>" class="wide" value="<?=$wgX["AllowedIPs:$i"]?>" onchange="lockEye($(document.wgX),<?=$i?>)" pattern="<?=$validList?>" title="IPv4 and IPv6 addresses" placeholder="(mandatory)" required></span>
+: <span class="input"><input type="text" name="AllowedIPs:<?=$i?>" class="wide" value="<?=$wgX["AllowedIPs:$i"]?>" onchange="quickValidate(this);lockEye($(document.wgX),<?=$i?>)" pattern="<?=$validList?>" title="Comma separated list of IPv4 and IPv6 IP addresses, CIDR optional" placeholder="(mandatory)" required></span>
 
 > This field is automatically filled in with the tunnel address of the peer. This allows the server to reach the peer over the tunnel.<br>
 > When the peer is another server or router with additional networks, then their subnets can be added here to make these networks reachable over the tunnel.
 
 Peer DNS server:
-: <span class="input"><input type="text" name="DNS:<?=$i?>" class="subnet" maxlength="40" value="<?=$wgX["DNS:$i"]?>" title="Peer DNS server address" placeholder="(optional)"></span>
+: <span class="input"><input type="text" name="DNS:<?=$i?>" class="subnet" maxlength="40" value="<?=$wgX["DNS:$i"]?>" onchange="quickValidate(this);lockEye($(document.wgX),<?=$i?>)" pattern="<?=$validDNSServerList?>" title="Comma separated list of IPv4 and IPv6 IP addresses" placeholder="(optional)"></span>
 
 > Use this entry to overwrite the current DNS server assignment of the Peer
 
 Persistent keepalive:
-: <span class="input"><input type="number" name="PersistentKeepalive:<?=$i?>" class="trim" min="0" max="600" value="<?=$wgX["PersistentKeepalive:$i"]?>" onchange="lockEye($(document.wgX),<?=$i?>)" placeholder="(disabled)">seconds</span>
+: <span class="input"><input type="number" name="PersistentKeepalive:<?=$i?>" class="trim" min="0" max="600" value="<?=$wgX["PersistentKeepalive:$i"]?>" onchange="quickValidate(this);lockEye($(document.wgX),<?=$i?>)" placeholder="(disabled)">seconds</span>
 
 > By default a WireGuard tunnel stays silent when no traffic is present, which may cause the connection to drop.
 > Normally this isn't a problem since a WireGuard tunnel is automatically re-established when it is needed.<br>
@@ -422,7 +422,7 @@ Persistent keepalive:
 <script markdown="1" type="text/html" id="peer-template-wgX">
 <div markdown="1" id="index-wgX-INDEX" class="shade-<?=$display['theme']?>">
 Peer name:
-: <span class="input"><input type="text" name="Name:INDEX" class="wide" maxlength="99" value="" onchange="lockEye($(document.wgX),INDEX)" placeholder="(optional)"></span>
+: <span class="input"><input type="text" name="Name:INDEX" class="wide" maxlength="99" value="" onchange="quickValidate(this);lockEye($(document.wgX),INDEX)" placeholder="(optional)"></span>
   <input type="button" class="form advanced zoneINDEX" style="display:none" value="Delete Peer" onclick="delPeer($(document.wgX),'#index-wgX-INDEX')">
   <span class="pin"><i class="fa fa-fw fa-eye eyeINDEX key-off" title="Show Peer Config"></i>
   <i class="fa fa-fw fa-key zoneINDEX key-off" title="Toggle keys"></i>
@@ -485,8 +485,8 @@ Peer tunnel address IPv6:
 
 Peer endpoint:
 <input type="hidden" name="Endpoint:INDEX" value="">
-: <span class="input"><input type="text" name="gui:Endpoint:INDEX" class="subnet" value="" pattern="<?=$validText?>" title="IP address or FQDN" onchange="lockEye($(document.wgX),INDEX)" placeholder="(not used)">:
-  <input type="number" name="gui:ListenPort:INDEX" class="port" min="1" max="65535" value="" onchange="lockEye($(document.wgX),INDEX)"></span>
+: <span class="input"><input type="text" name="gui:Endpoint:INDEX" class="subnet" value="" pattern="<?=$validText?>" title="IP address or FQDN" onchange="toLC(this);quickValidate(this);lockEye($(document.wgX),INDEX)" placeholder="(not used)">:
+  <input type="number" name="gui:ListenPort:INDEX" class="port" min="1" max="65535" value="" onchange="quickValidate(this);lockEye($(document.wgX),INDEX)"></span>
   <input type="button" class="form ping-button2-INDEX" value="Ping" onclick="ping($(document.wgX),this,'input[name=&quot;gui:Endpoint:INDEX&quot;]')" disabled>
 
 > When this field is left empty, the server operates in *passive mode* to establish the tunnel. It must be the peer which starts the tunnel.
@@ -494,18 +494,18 @@ Peer endpoint:
 > When an IP address is entered to connect to the peer, the server operates in *active mode* and establishes the tunnel to the peer as soon as there is data to send.
 
 Peer allowed IPs:
-: <span class="input"><input type="text" name="AllowedIPs:INDEX" class="wide" value="" onchange="lockEye($(document.wgX),INDEX)" pattern="<?=$validList?>" title="IPv4 and IPv6 addresses" placeholder="(mandatory)" required></span>
+: <span class="input"><input type="text" name="AllowedIPs:INDEX" class="wide" value="" onchange="quickValidate(this);lockEye($(document.wgX),INDEX)" pattern="<?=$validList?>" title="Comma separated list of IPv4 and IPv6 IP addresses, CIDR optional" placeholder="(mandatory)" required></span>
 
 > This field is automatically filled in with the tunnel address of the peer. This allows the server to reach the peer over the tunnel.<br>
 > When the peer is another server or router with additional networks, then their subnets can be added here to make these networks reachable over the tunnel.
 
 Peer DNS server:
-: <span class="input"><input type="text" name="DNS:INDEX" class="subnet" maxlength="40" value="" title="Peer DNS server address" placeholder="(optional)"></span>
+: <span class="input"><input type="text" name="DNS:INDEX" class="subnet" maxlength="40" value="" onchange="quickValidate(this);lockEye($(document.wgX),INDEX)" pattern="<?=$validDNSServerList?>" title="Comma separated list of IPv4 and IPv6 IP addresses" placeholder="(optional)"></span>
 
 > Use this entry to overwrite the current DNS server assignment of the Peer
 
 Persistent keepalive:
-: <span class="input"><input type="number" name="PersistentKeepalive:INDEX" class="trim" min="0" max="600" value="" onchange="lockEye($(document.wgX),INDEX)" placeholder="(disabled)">seconds</span>
+: <span class="input"><input type="number" name="PersistentKeepalive:INDEX" class="trim" min="0" max="600" value="" onchange="quickValidate(this);lockEye($(document.wgX),INDEX)" placeholder="(disabled)">seconds</span>
 
 > By default a WireGuard tunnel stays silent when no traffic is present, which may cause the connection to drop.
 > Normally this isn't a problem since a WireGuard tunnel is automatically re-established when it is needed.<br>
