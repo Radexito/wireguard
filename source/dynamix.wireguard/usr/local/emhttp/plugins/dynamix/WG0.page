@@ -218,6 +218,8 @@ input.nok{color:#f2f2f2;background:#f0000c}
 select.subnet{min-width:150px}
 i.fa-fw{margin-left:5px}
 i.key-off{opacity:0.3;cursor:default!important}
+input:user-invalid {border-bottom-color:#E22828;}
+input:-moz-ui-invalid {border-bottom-color:#E22828;}
 </style>
 <script src="<?autov('/webGui/javascript/jquery.switchbutton.js')?>"></script>
 <script>
@@ -245,8 +247,12 @@ if (!HTMLInputElement.prototype.reportValidity || (navigator.userAgent.indexOf("
     if (this.checkValidity()) {
       return true;
     } else {
+      var labelText = "_(Invalid data)_";
+      try {
+        labelText = $(this).closest('dl').children().first()[0].textContent;
+      } catch (err) { }
       // the browser generates the validationMessage, we cannot translate it
-      swal({title:"_(Invalid data)_",text:this.validationMessage,html:true,type:'error',confirmButtonText:"_(Ok)_"});
+      swal({title:labelText,text:this.validationMessage,html:true,type:'error',confirmButtonText:"_(Ok)_"});
       return false;
     }
   };
