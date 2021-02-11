@@ -239,6 +239,19 @@ netport['wg0'] = '<?=$netport['wg0']?>';
 netbase6['wg0'] = '<?=$netbase6['wg0']?>';
 netpool6['wg0'] = '<?=$netpool6['wg0']?>';
 
+// polyfill to fix reportValidity() for Firefox
+if (!HTMLInputElement.prototype.reportValidity || (navigator.userAgent.indexOf("Firefox") !== -1)) {
+  HTMLInputElement.prototype.reportValidity = function () {
+    if (this.checkValidity()) {
+      return true;
+    } else {
+      // the browser generates the validationMessage, we cannot translate it
+      swal({title:"_(Invalid data)_",text:this.validationMessage,html:true,type:'error',confirmButtonText:"_(Ok)_"});
+      return false;
+    }
+  };
+}
+
 function ipv4(ip) {
   return ip.indexOf('.')>0;
 }

@@ -3,19 +3,19 @@
 <!ENTITY name      "dynamix.wireguard">
 <!ENTITY launch    "Settings/VPNmanager">
 <!ENTITY author    "limetech">
-<!ENTITY version   "2021.02.10a">
+<!ENTITY version   "2021.02.11">
 <!ENTITY github    "unraid/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
-<!ENTITY MD5       "e984a6b0adb380d47ecd8d1989e79b8d">
-<!ENTITY SHA256    "6dad3e2d768b15bb3ac4dd4d0267d2b20a7a13699200890817e4bf9c03699cdf">
+<!ENTITY MD5       "4c8305fa4bdd43fa7d37d284129dbad4">
+<!ENTITY SHA256    "0fc1803b24e2ea667c0738d14488a14556cfe14f1e48f9f59816cd1e3e68e5a3">
 
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-vpn" pluginURL="&pluginURL;" launch="&launch;" min="6.8.0-rc1" support="https://forums.unraid.net/topic/84229-dynamix-wireguard-vpn/?tab=comments#comment-780291">
   <CHANGES>
 ##&name;
 
-###2021.02.10
+###2021.02.11
 - move to unraid repo
 - change the plugin icon
 - validate the local endpoint
@@ -28,6 +28,7 @@
 - don't add peer if there are errors that would be propagated to the peer
 - validate all fields onchange, not just onsubmit
 - validate format of Peer DNS server
+- polyfill to fix reportValidity() for Firefox
 
 ###2020.07.10
 - added multi-language handling
