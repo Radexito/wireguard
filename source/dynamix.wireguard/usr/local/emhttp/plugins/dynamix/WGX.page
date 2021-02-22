@@ -416,7 +416,7 @@ Persistent keepalive:
 <?endforeach;?>
 
 &nbsp;
-: <input type="submit" value="Apply" disabled><input type="button" value="Done" onclick="done()"><input type="button" value="Add Peer" onclick="addPeer($(document.wgX),'wgX')"><input type="button" class="advanced wgX" value="Delete Tunnel" style="float:right;display:none" onclick="delTunnel('wgX')">
+: <input type="submit" value="Apply" onclick="return(validateForm($(document.wgX),'wgX'))" disabled><input type="button" value="Done" onclick="done()"><input type="button" value="Add Peer" onclick="addPeer($(document.wgX),'wgX')"><input type="button" class="advanced wgX" value="Delete Tunnel" style="float:right;display:none" onclick="delTunnel('wgX')">
 </form>
 
 <script markdown="1" type="text/html" id="peer-template-wgX">

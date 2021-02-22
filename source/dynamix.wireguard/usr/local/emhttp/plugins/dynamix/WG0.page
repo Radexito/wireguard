@@ -273,6 +273,24 @@ function nodefault(ip) {
 function nodefault6(ip) {
   return ip != '::/0';
 }
+function validateForm(form,vtun) {
+  // this runs when the Apply button is clicked, before built-in form validation and before the form's onsubmit function
+  // if any fields do not pass basic validation, ensure they are visible then manually show the validation error
+  // this prevents validation errors on hidden fields
+  var isValid = true;
+  form.find('input').each(function(){
+    var i = this.name.match(/.*:(\d+)/) ? this.name.match(/.*:(\d+)/)[1] : -1;
+    if (i > -1 && !this.checkValidity()) {
+      if ($(this).is(":hidden")) {
+        var icon = $('#chevron-'+vtun+'-'+i);
+        openClose(form,icon,'div.zone'+i);
+      }
+      this.reportValidity();
+      isValid = false;
+    }
+  });
+  return isValid;
+}
 function prepareSettings(form,vtun) {
   var subnets = '<?=$subnets?>';
   var shared = '<?=$hosts?>';
@@ -481,19 +499,7 @@ function delTunnel(vtun) {
 }
 function addPeer(form,vtun) {
   // don't add peer if there are errors that would be propagated to the peer
-  var err = 0;
-  form.find('input.subnet').each(function(){
-    var i = this.name.match(/.*:(\d+)/) ? this.name.match(/.*:(\d+)/)[1] : -1;
-    if (i > -1 && !this.checkValidity()) {
-      if ($(this).is(":hidden")) {
-        var icon = $('#chevron-'+vtun+'-'+i);
-        openClose(form,icon,'div.zone'+i);
-      }
-      this.reportValidity();
-      err++;
-    }
-  });
-  if (err) return false;
+  if (!validateForm(form,vtun)) return false;
 
   var index = [0];
   form.find('div[id^="index-'+vtun+'-"]').each(function(){index.push($(this).prop('id').split('-')[2]);});
@@ -1386,7 +1392,7 @@ Persistent keepalive:
 <?endforeach;?>
 
 &nbsp;
-: <input type="submit" value="Apply" disabled><input type="button" value="Done" onclick="done()"><input type="button" value="Add Peer" onclick="addPeer($(document.wg0),'wg0')"><input type="button" class="advanced wg0" value="Delete Tunnel" style="float:right;display:none" onclick="delTunnel('wg0')"<?=file_exists($conf_wg0)?'':' disabled'?>>
+: <input type="submit" value="Apply" onclick="return(validateForm($(document.wg0),'wg0'))" disabled><input type="button" value="Done" onclick="done()"><input type="button" value="Add Peer" onclick="addPeer($(document.wg0),'wg0')"><input type="button" class="advanced wg0" value="Delete Tunnel" style="float:right;display:none" onclick="delTunnel('wg0')"<?=file_exists($conf_wg0)?'':' disabled'?>>
 </form>
 
 <script markdown="1" type="text/html" id="peer-template-wg0">

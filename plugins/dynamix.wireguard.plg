@@ -3,17 +3,21 @@
 <!ENTITY name      "dynamix.wireguard">
 <!ENTITY launch    "Settings/VPNmanager">
 <!ENTITY author    "limetech">
-<!ENTITY version   "2021.02.22">
+<!ENTITY version   "2021.02.22a">
 <!ENTITY github    "unraid/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
-<!ENTITY MD5       "2700c7f3605d700ed7de0ab76987e500">
-<!ENTITY SHA256    "6a5662040095949bbbebc0630a42b976bd1daed5e83274b689ea91e7a2bcdb61">
+<!ENTITY MD5       "f18db20cc7da7612e79ce3fd089b00a5">
+<!ENTITY SHA256    "29f385654664b68b2b976299a0dc4b6fcff61a557c02235a317f6cd3c1a7943b">
 
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-vpn" pluginURL="&pluginURL;" launch="&launch;" min="6.8.0-rc1" support="https://forums.unraid.net/topic/84229-dynamix-wireguard-vpn/?tab=comments#comment-780291">
   <CHANGES>
 ##&name;
+
+###2021.02.22
+- streamline validation functions
+- ensure fields are visible before showing validation errors on them
 
 ###2021.02.11
 - move to unraid repo
