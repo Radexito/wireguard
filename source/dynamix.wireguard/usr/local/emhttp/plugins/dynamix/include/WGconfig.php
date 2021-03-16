@@ -1,6 +1,6 @@
 <?PHP
-/* Copyright 2005-2019, Lime Technology
- * Copyright 2012-2019, Bergware International.
+/* Copyright 2005-2021, Lime Technology
+ * Copyright 2012-2021, Bergware International.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -12,6 +12,10 @@
 ?>
 <?
 $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
+// add translations
+$_SERVER['REQUEST_URI'] = 'settings';
+require_once "$docroot/webGui/include/Translations.php";
+
 require_once "$docroot/webGui/include/Helpers.php";
 
 $file = $_GET['file'];
@@ -33,14 +37,14 @@ img:hover{transform:scale(1.1)}
 <script>
 function cleanUp(id,file) {
   if (document.hasFocus()) {
-    $('#'+id).val('Download').prop('disabled',false);
+    $('#'+id).val("<?=_('Download')?>").prop('disabled',false);
     $.post('/webGui/include/Download.php',{cmd:'delete',file:file,csrf_token:'<?=$_GET['csrf_token']?>'});
   } else {
     setTimeout(function(){cleanUp(id,file);},1000);
   }
 }
 function download(id,source,file) {
-  $('#'+id).val('Downloading...').prop('disabled',true);
+  $('#'+id).val("<?=_('Downloading')?>...").prop('disabled',true);
   $.post('/webGui/include/Download.php',{cmd:'save',source:source+'.conf',file:file,opts:'qj',csrf_token:'<?=$_GET['csrf_token']?>'},function(){
     $.post('/webGui/include/Download.php',{cmd:'save',source:source+'.png',file:file,opts:'qj',csrf_token:'<?=$_GET['csrf_token']?>'},function(zip){
       location = zip;
@@ -50,7 +54,7 @@ function download(id,source,file) {
 }
 </script>
 <body>
-<h3><u><?=$_GET['path']?'Remote peer configuration':'Local server configuration'?></u></h3>
+<h3><u><?=$_GET['path']?_('Remote peer configuration'):_('Local server configuration')?></u></h3>
 <div>
 <pre>
 <?readfile("$path/$file.conf")?>
@@ -61,6 +65,6 @@ function download(id,source,file) {
 <img src="/webGui/include/WGimage.php?file=<?="$file.png"?>&csrf_token=<?=$_GET['csrf_token']?>&v=<?=filemtime("$path/$file.png")?>">
 <?endif;?>
 <input type="button" value="Close" onclick="top.Shadowbox.close()">
-<input type="button" id="download" value="Download" onclick="download(this.id,'<?="$path/$file"?>','<?=$file?>.zip')">
+<input type="button" id="download" value="<?=_('Download')?>" onclick="download(this.id,'<?="$path/$file"?>','<?=$file?>.zip')">
 </div>
 </body>
