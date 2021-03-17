@@ -194,6 +194,7 @@ span.vshift{margin-top:-2px!important}
 span.label{font-size:1.1rem;text-transform:uppercase;letter-spacing:1px;margin-left:<?=$themes1?'-12':'-4'?>px}
 span.input{display:inline-block;width:420px}
 span.access-type{display:inline-block;width:30%;white-space:normal}
+span.block{display:inline-block;width:43%;white-space:normal}
 div.shade-white{background-color:#ededed;margin-top:10px;padding:8px 0 3px 0}
 div.shade-black{background-color:#212121;margin-top:10px;padding:8px 0 3px 0}
 div.shade-azure{background-color:#edeaef;margin-top:10px;padding:8px 0 3px 0}
@@ -979,16 +980,16 @@ function getPublicIP(ip,wg,protocol) {
     var ext_ipv6 = ips[3];
     if ((protocol==''||protocol=='46') && ext_ipv4 && ip) {
       if (!int_ipv4) {
-        $('#endpoint4-'+wg).html("<dt>&nbsp;</dt><dd><span class='input'></span>  <span>_(Remark)_: _(The Local endpoint does not resolve to an IPv4 address)_. _(In most cases, this should be your public WAN IPv4)_: <b>"+ext_ipv4+"</b></span></dd>\n").show();
+        $('#endpoint4-'+wg).html("<dt>&nbsp;</dt><dd><span class='input'></span>  <span class='block'>_(Remark)_: _(The Local endpoint does not resolve to an IPv4 address)_. _(In most cases, this should be your public WAN IPv4)_: <b>"+ext_ipv4+"</b></span></dd>\n").show();
       } else if (!endpoints.includes(int_ipv4)) {
-        $('#endpoint4-'+wg).html("<dt>&nbsp;</dt><dd><span class='input'></span>  <span>_(Remark)_: _(The Local endpoint resolves to)_ <b>"+int_ipv4+".</b> _(In most cases, this should be your public WAN IPv4 instead)_: <b>"+ext_ipv4+"</b></span></dd>\n").show();
+        $('#endpoint4-'+wg).html("<dt>&nbsp;</dt><dd><span class='input'></span>  <span class='block'>_(Remark)_: _(The Local endpoint resolves to)_ <b>"+int_ipv4+".</b> _(In most cases, this should be your public WAN IPv4 instead)_: <b>"+ext_ipv4+"</b></span></dd>\n").show();
       }
     }
     if ((protocol=='6'||protocol=='46') && ext_ipv6 && ip) {
       if (!int_ipv6) {
-        $('#endpoint6-'+wg).html("<dt>&nbsp;</dt><dd><span class='input'></span>  <span>_(Remark)_: _(The Local endpoint does not resolve to an IPv6 address)_. _(In most cases, this should be your public WAN IPv6)_: <b>"+ext_ipv6+"</b></span></dd>\n").show();
+        $('#endpoint6-'+wg).html("<dt>&nbsp;</dt><dd><span class='input'></span>  <span class='block'>_(Remark)_: _(The Local endpoint does not resolve to an IPv6 address)_. _(In most cases, this should be your public WAN IPv6)_: <b>"+ext_ipv6+"</b></span></dd>\n").show();
       } else if (!endpoints.includes(int_ipv6)) {
-        $('#endpoint6-'+wg).html("<dt>&nbsp;</dt><dd><span class='input'></span>  <span>_(Remark)_: _(The Local endpoint resolves to)_ <b>"+int_ipv6+".</b> _(In most cases, this should be your public WAN IPv6 instead)_: <b>"+ext_ipv6+"</b></span></dd>\n").show();
+        $('#endpoint6-'+wg).html("<dt>&nbsp;</dt><dd><span class='input'></span>  <span class='block'>_(Remark)_: _(The Local endpoint resolves to)_ <b>"+int_ipv6+".</b> _(In most cases, this should be your public WAN IPv6 instead)_: <b>"+ext_ipv6+"</b></span></dd>\n").show();
       }
     }
 <?if (!$public):?>
@@ -1203,7 +1204,7 @@ _(Local tunnel address IPv6)_:
 _(Local endpoint)_:
 : <span class="input"><input type="text" id="endpoint-wg0" name="Endpoint:0" class="subnet" value="<?=$vpn_wg0?'':$wg0['Endpoint:0']?>" onchange="toLC(this);quickValidate(this);" pattern="<?=$validText?>" title="_(IP address or FQDN)_" placeholder="<?=$vpn_wg0?'(not used)':preg_replace('/^(www\.).+(\.unraid.net)$/','$1<hash>$2',$public)?>">:
   <input type="number" name="gui:ListenPort:0" class="port" min="1" max="65535" value="<?=$vpn_wg0?'':$wg0['ListenPort:0']?>" onchange="if(quickValidate(this)) {portRemark($(document.wg0),'wg0',this.value)}" placeholder="<?=$vpn_wg0?'':$netport['wg0']?>"></span>
-  <span class="remark" style="display:none">_(Remark)_: _(configure your router with port forwarding of port)_ **<span id="my-port-wg0"><?=$wg0['ListenPort:0']?:$netport['wg0']?></span>/_(UDP)_** _(to)_ **<?=$server?>:<?=$wg0['ListenPort:0']?:$netport['wg0']?>**</span><span class="upnp wg0"></span>
+  <span class="remark block" style="display:none">_(Remark)_: _(configure your router with port forwarding of port)_ **<span id="my-port-wg0"><?=$wg0['ListenPort:0']?:$netport['wg0']?></span>/_(UDP)_** _(to)_ **<?=$server?>:<?=$wg0['ListenPort:0']?:$netport['wg0']?>**</span><span class="upnp wg0 block"></span>
   <input type="hidden" name="ListenPort:0" value=""><dl id="endpoint4-wg0" style="display:none"></dl><dl id="endpoint6-wg0" style="display:none"></dl>
 
 :wg_local_endpoint_help:
@@ -1214,7 +1215,7 @@ _(Local server uses NAT)_:
   <?=mk_option($wg0['NAT:0'], "", _("Yes"))?>
   <?=mk_option($wg0['NAT:0'], "no", _("No"))?>
   </select></span>
-  <span id="my-static1-wg0" style="display:none">_(Remark)_: _(configure your router with a static route of)_ **<?=$wg0['Network:0']?>** _(to)_ **<?=$server?>**</span><span id="my-static2-wg0" style="display:none">_(Remark)_: _(docker containers on custom networks need static routing)_ **<?=$wg0['Network:0']?>** _(to)_ **<?=$server?>**</span>
+  <span id="my-static1-wg0" class="block" style="display:none">_(Remark)_: _(configure your router with a static route of)_ **<?=$wg0['Network:0']?>** _(to)_ **<?=$server?>**</span><span id="my-static2-wg0" class="block" style="display:none">_(Remark)_: _(docker containers on custom networks need static routing)_ **<?=$wg0['Network:0']?>** _(to)_ **<?=$server?>**</span>
 
 :wg_local_server_uses_nat_help:
 
