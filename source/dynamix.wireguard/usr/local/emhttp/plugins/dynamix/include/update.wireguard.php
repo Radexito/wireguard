@@ -17,8 +17,6 @@ $etc     = '/etc/wireguard';
 $t1 = '6';  // 6 sec timeout
 $t2 = '12'; // 12 sec timeout
 
-if (!function_exists('_')) {function _($text) {return $text;}} // multi-language handling
-
 function ipv4($ip) {
   return strpos($ip,'.')!==false;
 }
