@@ -39,6 +39,7 @@ $(function(){
   ctrl += "<span class='even'><span class='status vhshift'><input type='checkbox' id='view-wgX' style='display:none'></span></span>";
   ctrl += "<span class='even'><span class='status vhshift'><input type='checkbox' id='toggle-wgX' style='display:none'></span></span>";
   var form = $(document.wgX);
+  getPublicIP($('#endpoint-wgX').val(),'wgX',$('#protocol-wgX').val());
   $('div#title').each(function(){if ($(this).html().indexOf('status vhshift')==-1) {$(this).find('span.left').append(ctrl);return false;}});
   $('#start-wgX').switchButton({labels_placement:'left',off_label:"_(Off)_",on_label:"_(On)_"});
   $('#start-wgX').change(function(){
@@ -176,7 +177,7 @@ _(Local public key)_:
 </div>
 <div markdown="1" class="advanced wgX zone0" style="display:none">
 _(Network protocol)_:
-: <span class="input"><select name="PROT:0" size="1" class="subnet" onchange="setProtocol($(document.wgX),'wgX',true)">
+: <span class="input"><select id="protocol-wgX" name="PROT:0" size="1" class="subnet" onchange="setProtocol($(document.wgX),'wgX',true)">
   <?=mk_option($wgX['PROT:0'], "", _("IPv4 only"))?>
   <?=mk_option($wgX['PROT:0'], "6", _("IPv6 only"))?>
   <?=mk_option($wgX['PROT:0'], "46", _("IPv4 + IPv6"))?>
@@ -214,27 +215,10 @@ _(Local tunnel address IPv6)_:
 </div>
 </div>
 _(Local endpoint)_:
-: <span class="input"><input type="text" name="Endpoint:0" class="subnet" value="<?=$vpn_wgX?'':$wgX['Endpoint:0']?>" onchange="toLC(this);quickValidate(this);" pattern="<?=$validText?>" title="_(IP address or FQDN)_" placeholder="<?=$vpn_wgX?'(not used)':preg_replace('/^(www\.).+(\.unraid.net)$/','$1<hash>$2',$public)?>">:
+: <span class="input"><input type="text" id="endpoint-wgX" name="Endpoint:0" class="subnet" value="<?=$vpn_wgX?'':$wgX['Endpoint:0']?>" onchange="toLC(this);quickValidate(this);" pattern="<?=$validText?>" title="_(IP address or FQDN)_" placeholder="<?=$vpn_wgX?'(not used)':preg_replace('/^(www\.).+(\.unraid.net)$/','$1<hash>$2',$public)?>">:
   <input type="number" name="gui:ListenPort:0" class="port" min="1" max="65535" value="<?=$vpn_wgX?'':$wgX['ListenPort:0']?>" onchange="if(quickValidate(this)) {portRemark($(document.wgX),'wgX',this.value)}"  placeholder="<?=$vpn_wgX?'':$netport['wgX']?>"></span>
   <span class="remark" style="display:none">_(Remark)_: _(configure your router with port forwarding of port)_ **<span id="my-port-wgX"><?=$wgX['ListenPort:0']?:$netport['wgX']?></span>/_(UDP)_** _(to)_ **<?=$server?>:<?=$wgX['ListenPort:0']?:$netport['wgX']?>**</span><span class="upnp wgX"></span>
-  <input type="hidden" name="ListenPort:0" value="">
-
-<?
-if ( ($wgX['PROT:0']=='' || $wgX['PROT:0']=='46') && $externalIP4 && $wgX['Endpoint:0'] ) {
-  if (!$wgX['EndpointIP4:0']) {
-    print("<dl><dt>&nbsp;</dt><dd><span class='input'></span>  <span>_(Remark)_: _(The Local endpoint does not resolve to an IPv4 address)_. _(In most cases, this should be your public WAN IPv4)_: <b>".$externalIP4."</b></span></dd></dl>\n");
-  } elseif (!in_array($wgX['EndpointIP4:0'], $commonEndpointIPs) ) {
-    print("<dl><dt>&nbsp;</dt><dd><span class='input'></span>  <span>_(Remark)_: _(The Local endpoint resolves to)_ <b>".$wgX['EndpointIP4:0'].".</b> _(In most cases, this should be your public WAN IPv4 instead)_: <b>".$externalIP4."</b></span></dd></dl>\n");
-  }
-}
-if ( ($wgX['PROT:0']=='6' || $wgX['PROT:0']=='46') && $externalIP6 && $wgX['Endpoint:0'] ) {
-  if (!$wgX['EndpointIP6:0']) {
-    print("<dl><dt>&nbsp;</dt><dd><span class='input'></span>  <span>_(Remark)_: _(The Local endpoint does not resolve to an IPv6 address)_. _(In most cases, this should be your public WAN IPv6)_: <b>".$externalIP6."</b></span></dd></dl>\n");
-  } elseif (!in_array($wgX['EndpointIP6:0'], $commonEndpointIPs) ) {
-    print("<dl><dt>&nbsp;</dt><dd><span class='input'></span>  <span>_(Remark)_: _(The Local endpoint resolves to)_ <b>".$wgX['EndpointIP6:0'].".</b> _(In most cases, this should be your public WAN IPv6 instead)_: <b>".$externalIP6."</b></span></dd></dl>\n");
-  }
-}
-?>
+  <input type="hidden" name="ListenPort:0" value=""><dl id="endpoint4-wgX" style="display:none"></dl><dl id="endpoint6-wgX" style="display:none"></dl>
 
 :wg_local_endpoint_X_help:
 

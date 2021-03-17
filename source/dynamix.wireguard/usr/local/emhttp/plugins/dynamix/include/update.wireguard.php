@@ -1,6 +1,6 @@
 <?PHP
-/* Copyright 2005-2019, Lime Technology
- * Copyright 2012-2019, Bergware International.
+/* Copyright 2005-2021, Lime Technology
+ * Copyright 2012-2021, Bergware International.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -11,11 +11,14 @@
  */
 ?>
 <?
-$docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
-$etc     = '/etc/wireguard';
+$docroot  = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
+$etc      = '/etc/wireguard';
+$validIP4 = "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}";
+$validIP6 = "(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(:|([0-9a-fA-F]{1,4}:)+):(([0-9a-fA-F]{1,4}:)*[0-9a-fA-F]{1,4})?)";
 
 $t1 = '6';  // 6 sec timeout
 $t2 = '12'; // 12 sec timeout
+
 
 function ipv4($ip) {
   return strpos($ip,'.')!==false;
@@ -285,8 +288,15 @@ case 'ping':
   echo exec("ping -qc1 -W4 $addr|grep -Po '1 received'");
   break;
 case 'public':
+  $ip = $_POST['#ip'];
+  $v4 = $_POST['#prot']=='' || $_POST['#prot']=='46';
+  $v6 = $_POST['#prot']=='6' || $_POST['#prot']=='46';
   $context = stream_context_create(['https'=>['timeout'=>12]]);
-  echo @file_get_contents('https://api.ipify.org',false,$context) ?: '';
+  $int_ipv4 = $v4 ? (preg_match("/^$validIP4$/", $ip) ? $ip : (@dns_get_record($ip, DNS_A)[0]['ip'] ?: '')) : '';
+  $ext_ipv4 = $v4 ? (@file_get_contents('https://api.ipify.org',false,$context) ?: '') : '';
+  $int_ipv6 = $v6 ? (preg_match("/^$validIP6$/", $ip) ? $ip : (@dns_get_record($ip, DNS_AAAA)[0]['ipv6'] ?: '')) : '';
+  $ext_ipv6 = $v6 ? (@file_get_contents('https://api6.ipify.org',false,$context) ?: '') : '';
+  echo "$int_ipv4;$ext_ipv4;$int_ipv6;$ext_ipv6";
   break;
 case 'addtunnel':
   $vtun = vtun();
