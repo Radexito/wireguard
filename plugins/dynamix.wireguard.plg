@@ -11,7 +11,7 @@
 <!ENTITY SHA256    "29f385654664b68b2b976299a0dc4b6fcff61a557c02235a317f6cd3c1a7943b">
 
 ]>
-<PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-vpn" pluginURL="&pluginURL;" launch="&launch;" min="6.8.0-rc1" support="https://forums.unraid.net/topic/84229-dynamix-wireguard-vpn/?tab=comments#comment-780291">
+<PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-vpn" pluginURL="&pluginURL;" launch="&launch;" min="6.9.0" support="https://forums.unraid.net/topic/84229-dynamix-wireguard-vpn/?tab=comments#comment-780291">
   <CHANGES>
 ##&name;
 
