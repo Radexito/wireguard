@@ -570,6 +570,9 @@ function addPeer(form,vtun) {
   });
 }
 function delPeer(form,peer) {
+  var deleted = form.find('input[name="#deleted"]');
+  var comma = deleted.val() ? ',' : '';
+  deleted.val(deleted.val()+comma+peer.substr(7));
   form.find(peer).remove();
   form.find('input[name="Name:0"]').trigger('change');
 }
@@ -1147,6 +1150,7 @@ $(function(){
 <input type="hidden" name="#subnets2" value="">
 <input type="hidden" name="#shared1" value="">
 <input type="hidden" name="#shared2" value="">
+<input type="hidden" name="#deleted" value="">
 _(Local name)_:
 : <span class="input"><input type="text" name="Name:0" class="wide" maxlength="99" value="<?=$wg0["Name:0"]?>" title="_(Use only letters A-Z, digits or space,dash,underscore)_" placeholder="(_(optional)_)"></span>
   <span class="pin"><i class="fa fa-fw fa-eye eye0<?=$this_wg0?'':' key-off'?>" style="cursor:pointer" onclick="WGconfig(this,'wg0','')" title="_(View Local Config)_"></i>

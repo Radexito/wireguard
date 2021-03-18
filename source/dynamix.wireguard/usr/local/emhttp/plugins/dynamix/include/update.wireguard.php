@@ -40,10 +40,10 @@ function vtun() {
   $x = 0; while (file_exists("$etc/wg{$x}.conf")) $x++;
   return "wg{$x}";
 }
-function delPeer($vtun) {
+function delPeer($vtun, $id='') {
   global $etc,$name;
   $dir = "$etc/peers";
-  foreach (glob("$dir/peer-$name-$vtun-*",GLOB_NOSORT) as $peer) unlink($peer);
+  foreach (glob("$dir/peer-$name-$vtun-$id*",GLOB_NOSORT) as $peer) unlink($peer);
 }
 function addPeer(&$x) {
   global $peers,$var;
@@ -78,45 +78,61 @@ function autostart($cmd,$vtun) {
     break;
   }
 }
-function createFiles($vtun) {
-  global $etc,$peers,$name;
+function createPeerFiles($vtun) {
+  global $etc,$peers,$name,$gone;
   $dir = "$etc/peers";
   $tmp = "/tmp/list.tmp";
-  if (!is_dir($dir)) mkdir($dir);
-  // delete old peer files that are no longer defined
-  foreach (glob("$dir/peer-$name-$vtun-*",GLOB_NOSORT) as $file) {
-    $pattern="#$dir/peer-$name-$vtun-(\d*).(png|conf)#m";
-    if (preg_match($pattern, $file, $matches)) {
-      $id=$matches[1];
-      if ($id && !$peers[$id]) {
-        unlink($file);
+  if (is_dir($dir)) {
+    if (count($gone)) {
+      foreach ($gone as $peer) {
+        // one or more peers are removed, delete the associated files
+        [$n,$i] = explode('-',$peer);
+        delPeer($n,$i);
+      }
+      $new = 1;
+      $peer = "$dir/peer-$name-$vtun";
+      $files = glob("$peer-*.conf",GLOB_NOSORT);
+      natsort($files);
+      foreach ($files as $file) {
+        $id = explode('-',basename($file,'.conf'))[3];
+        if ($id > $new) {
+          // rename files to match revised peers list
+          rename($file, "$peer-$new.conf");
+          rename(str_replace('.conf','.png',$file), "$peer-$new.png");
+        }
+        $new++;
       }
     }
+  } else {
+    mkdir($dir);
   }
-  // create/update peer files if they have changed and report back
   $list = [];
   foreach ($peers as $id => $peer) {
-    $cfg = "$dir/peer-$name-$vtun-$id.conf";
-    $png = str_replace('.conf','.png',$cfg);
+    if (empty($peer[1])) break; // peer config doesn't exist yet
+    $cfg    = "$dir/peer-$name-$vtun-$id.conf";
     $cfgold = @file_get_contents($cfg) ?: '';
     $cfgnew = implode("\n",$peer)."\n";
     if ($cfgnew !== $cfgold) {
       $list[] = "$vtun: peer $id".($peer[1][0]=='#' ? ' ('.substr($peer[1],1).')' : '');
       file_put_contents($cfg,$cfgnew);
-      @unlink($png);
+      $png = str_replace('.conf','.png',$cfg);
+      exec("qrencode -t PNG -r $cfg -o $png");
     }
-    if (!file_exists($png)) exec("qrencode -t PNG -r $cfg -o $png");
   }
+  // store the peer names which are updated
   if (count($list)) file_put_contents($tmp,implode("<br>",$list)); else @unlink($tmp);
 }
 function parseInput(&$input,&$x) {
-  global $conf,$user,$var,$next,$default,$default6;
+  global $conf,$user,$var,$section,$default,$default6;
+  $addPeer = false;
   foreach ($input as $key => $value) {
+    if ($key[0]=='#') continue;
     [$id,$i] = explode(':',$key);
-    if ($i != $next) {
+    if ($i != $section) {
       $conf[] = "\n[Peer]";
-      $next = $i;
-      if ($i>1) addPeer($x);
+      // special execution for first section only
+      $addPeer ? addPeer($x) : $addPeer = true;
+      $section = $i;
     }
     switch ($id) {
     case 'Name':
@@ -169,6 +185,8 @@ function parseInput(&$input,&$x) {
       }
       $var['allowedIPs'] = implode(', ',array_map('host',array_filter($list)));
       $var['tunnel'] = ($value==2||$value==3) ? $tunnel : false;
+      $user[] = "$id:$x=\"$value\"";
+      break;
     case 'Network':
     case 'Network6':
     case 'UPNP':
@@ -237,6 +255,7 @@ case 'update':
   $wg   = $_POST['#wg'];
   $name = $_POST['#name'];
   $vtun = $_POST['#vtun'];
+  $gone = explode(',',$_POST['#deleted']);
   $conf = ['[Interface]'];
   $user = $peers = $var = [];
   $var['subnets1'] = "AllowedIPs=".implode(', ',(array_unique(explode(', ',$_POST['#subnets1']))));
@@ -244,13 +263,13 @@ case 'update':
   $var['shared1']  = "AllowedIPs=".implode(', ',(array_unique(explode(', ',$_POST['#shared1']))));
   $var['shared2']  = "AllowedIPs=".implode(', ',(array_unique(explode(', ',$_POST['#shared2']))));
   $var['internet'] = "Endpoint=".implode(', ',(array_unique(explode(', ',$_POST['#internet']))));
-  $next = 0; $x = 1;
+  $section = 0; $x = 1;
   parseInput($_POST,$x);
   addPeer($x);
   exec("wg-quick down $vtun 2>/dev/null");
   file_put_contents($file,implode("\n",$conf)."\n");
   file_put_contents($cfg,implode("\n",$user)."\n");
-  createFiles($vtun);
+  createPeerFiles($vtun);
   if ($wg) exec("wg-quick up $vtun 2>/dev/null");
   $save = false;
   break;
@@ -357,7 +376,7 @@ case 'import':
   }
   foreach ($import as $key => $val) $sort[] = explode(':',$key)[1];
   array_multisort($sort,$import);
-  $next = 0; $x = 1;
+  $section = 0; $x = 1;
   $conf = ['[Interface]'];
   $var['default'] = $import['PROT:0']=='' ? "AllowedIPs=$default" : "AllowedIPs=$default6";
   $var['internet'] = "Endpoint=unknown";

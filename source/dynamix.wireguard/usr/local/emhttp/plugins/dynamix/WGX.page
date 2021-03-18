@@ -149,11 +149,12 @@ $(function(){
 <input type="hidden" name="#name" value="<?=$tower?>">
 <input type="hidden" name="#vtun" value="wgX">
 <input type="hidden" name="#wg" value="">
-<input type="hidden" name="#subnets1" value="<?=implode(', ',$hosts)?>, ">
-<input type="hidden" name="#subnets2" value="<?=implode(', ',$subnets)?>, ">
-<input type="hidden" name="#shared1" value="<?=implode(', ',$hosts)?>, ">
-<input type="hidden" name="#shared2" value="<?=implode(', ',$subnets)?>, ">
 <input type="hidden" name="#internet" value="<?=$public?>">
+<input type="hidden" name="#subnets1" value="">
+<input type="hidden" name="#subnets2" value="">
+<input type="hidden" name="#shared1" value="">
+<input type="hidden" name="#shared2" value="">
+<input type="hidden" name="#deleted" value="">
 _(Local name)_:
 : <span class="input"><input type="text" name="Name:0" class="wide" maxlength="99" value="<?=$wgX["Name:0"]?>" pattern="<?=$validname?>" title="_(Use only letters A-Z, digits or space,dash,underscore)_" placeholder="(_(optional)_)"></span>
   <span class="pin"><i class="fa fa-fw fa-eye eye0<?=$this_wgX?'':' key-off'?>" style="cursor:pointer" onclick="WGconfig(this,'wgX','')" title="_(View Local Config)_"></i>
