@@ -16,6 +16,7 @@ Tag="icon-vpn"
 ?>
 <?
 $etc = '/etc/wireguard';
+$tmp = '/tmp/list.tmp';
 
 unset($subnets,$hosts,$subnets6,$hosts6,$vtuns);
 exec("ip -4 route|grep -Po '^[^d].+dev (eth|br|bond)[0-9]'|cut -d' ' -f1",$subnets);
@@ -1124,6 +1125,10 @@ $(function(){
   if (vpn) form.find('select[name="NAT:0"]').val('no').prop('disabled',true);
   else if (form.find('select[name="NAT:0"]').val()=='no' && lan) $('span#my-static1-wg0').show();
   else if (lan) $('span#my-static2-wg0').show();
+<?if (file_exists($tmp)):?>
+  setTimeout(function(){swal({title:"_(Peer update required)_",text:"<b><u>_(List of peers)_</u></b><br><span style='display:inline-block;text-align:left'><?=file_get_contents($tmp)?></span>",type:'warning',html:true});},200);
+<?unlink($tmp);?>
+<?endif;?>
 });
 </script>
 <input type='file' id='file' accept='.conf' onchange='importFile(this.files[0])' style='display:none'>

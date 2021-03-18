@@ -81,6 +81,7 @@ function autostart($cmd,$vtun) {
 function createFiles($vtun) {
   global $etc,$peers,$name;
   $dir = "$etc/peers";
+  $tmp = "/tmp/list.tmp";
   if (!is_dir($dir)) mkdir($dir);
   // delete old peer files that are no longer defined
   foreach (glob("$dir/peer-$name-$vtun-*",GLOB_NOSORT) as $file) {
@@ -92,20 +93,21 @@ function createFiles($vtun) {
       }
     }
   }
-  // create/update peer files if they have changed
+  // create/update peer files if they have changed and report back
+  $list = [];
   foreach ($peers as $id => $peer) {
     $cfg = "$dir/peer-$name-$vtun-$id.conf";
     $png = str_replace('.conf','.png',$cfg);
     $cfgold = @file_get_contents($cfg) ?: '';
     $cfgnew = implode("\n",$peer)."\n";
     if ($cfgnew !== $cfgold) {
+      $list[] = "$vtun: peer $id".($peer[1][0]=='#' ? ' ('.substr($peer[1],1).')' : '');
       file_put_contents($cfg,$cfgnew);
       @unlink($png);
     }
-    if (!is_file($png)) {
-      exec("qrencode -t PNG -r $cfg -o $png");
-    }
+    if (!file_exists($png)) exec("qrencode -t PNG -r $cfg -o $png");
   }
+  if (count($list)) file_put_contents($tmp,implode("<br>",$list)); else @unlink($tmp);
 }
 function parseInput(&$input,&$x) {
   global $conf,$user,$var,$next,$default,$default6;
