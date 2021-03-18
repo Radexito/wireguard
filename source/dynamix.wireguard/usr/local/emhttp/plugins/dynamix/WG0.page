@@ -138,6 +138,7 @@ $maskIP6   = "([0-9]|[1-9][[0-9]|1[01][0-9]|12[0-8])?";
 $validText = "^($validDNS|$validIP4|$validIP6)$";
 $validList = "^(($validIP4/?$maskIP4|$validIP6/?$maskIP6)(, *)?)+$";
 $validDNSServerList = "^(($validIP4|$validIP6)(, *)?)+$";
+$validname = "^[0-9a-zA-Z \-_]*$";
 
 $netbase    = $netpool = $netport = [];
 $netbase6   = $netpool6 = [];
@@ -1147,7 +1148,7 @@ $(function(){
 <input type="hidden" name="#shared1" value="">
 <input type="hidden" name="#shared2" value="">
 _(Local name)_:
-: <span class="input"><input type="text" name="Name:0" class="wide" maxlength="99" value="<?=$wg0["Name:0"]?>" placeholder="(_(optional)_)"></span>
+: <span class="input"><input type="text" name="Name:0" class="wide" maxlength="99" value="<?=$wg0["Name:0"]?>" title="_(Use only letters A-Z, digits or space,dash,underscore)_" placeholder="(_(optional)_)"></span>
   <span class="pin"><i class="fa fa-fw fa-eye eye0<?=$this_wg0?'':' key-off'?>" style="cursor:pointer" onclick="WGconfig(this,'wg0','')" title="_(View Local Config)_"></i>
   <i class="fa fa-fw fa-key zone0<?=$wg0['PublicKey:0']?'':' key-off'?>" style="cursor:pointer" onclick="openClose($(document.wg0),null,'div.key0')" title="_(Toggle keys)_"></i>
   <i id="chevron-wg0-0" class="fa fa-fw fa-chevron-down" style="cursor:pointer" onclick="openClose($(document.wg0),this,'div.zone0')" title="_(Toggle view)_"></i></span>
@@ -1268,7 +1269,7 @@ DNS servers:
 <?foreach ($peer_wg0 as $i):?>
 <div markdown="1" id="index-wg0-<?=$i?>" class="shade-<?=$display['theme']?>">
 _(Peer name)_:
-: <span class="input"><input type="text" name="Name:<?=$i?>" class="wide" maxlength="99" value="<?=$wg0["Name:$i"]?>" onchange="quickValidate(this);" placeholder="(_(optional)_)"></span>
+: <span class="input"><input type="text" name="Name:<?=$i?>" class="wide" maxlength="99" value="<?=$wg0["Name:$i"]?>" onchange="quickValidate(this);" pattern="<?=$validname?>" pattern="<?=$validname?>" title="_(Use only letters A-Z, digits or space,dash,underscore)_" placeholder="(_(optional)_)"></span>
   <input type="button" class="form advanced zone<?=$i?>" style="display:none" value="_(Delete Peer)_" onclick="delPeer($(document.wg0),'#index-wg0-<?=$i?>')">
   <span class="pin"><i class="fa fa-fw fa-eye eye<?=$i?><?=(file_exists("$etc/peers/peer-$tower-wg0-$i.conf")&&(int)$wg0["TYPE:$i"]!=7)?'':' key-off'?>" style="cursor:pointer" onclick="WGconfig(this,'peer-<?=$tower?>-wg0-<?=$i?>','/peers')" title="_(View Peer Config)_"></i>
   <i class="fa fa-fw fa-key zone<?=$i?><?=$wg0["PublicKey:$i"]?'':' key-off'?>" style="cursor:pointer" onclick="openClose($(document.wg0),null,'div.key<?=$i?>')" title="_(Toggle keys)_"></i>
@@ -1363,7 +1364,7 @@ _(Persistent keepalive)_:
 <script markdown="1" type="text/html" id="peer-template-wg0">
 <div markdown="1" id="index-wg0-INDEX" class="shade-<?=$display['theme']?>">
 _(Peer name)_:
-: <span class="input"><input type="text" name="Name:INDEX" class="wide" maxlength="99" value="" onchange="quickValidate(this);" placeholder="(_(optional)_)"></span>
+: <span class="input"><input type="text" name="Name:INDEX" class="wide" maxlength="99" value="" onchange="quickValidate(this);" pattern="<?=$validname?>" title="_(Use only letters A-Z, digits or space,dash,underscore)_" placeholder="(_(optional)_)"></span>
   <input type="button" class="form advanced zoneINDEX" style="display:none" value="_(Delete Peer)_" onclick="delPeer($(document.wg0),'#index-wg0-INDEX')">
   <span class="pin"><i class="fa fa-fw fa-eye eyeINDEX key-off" title="_(Show Peer Config)_"></i>
   <i class="fa fa-fw fa-key zoneINDEX key-off" title="_(Toggle keys)_"></i>
