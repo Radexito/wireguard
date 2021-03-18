@@ -277,7 +277,7 @@ DNS servers:
 <div markdown="1" id="index-wgX-<?=$i?>" class="shade-<?=$display['theme']?>">
 _(Peer name)_:
 : <span class="input"><input type="text" name="Name:<?=$i?>" class="wide" maxlength="99" value="<?=$wgX["Name:$i"]?>" onchange="quickValidate(this);" pattern="<?=$validname?>" title="_(Use only letters A-Z, digits or space,dash,underscore)_" placeholder="(_(optional)_)"></span>
-  <input type="button" class="form advanced zone<?=$i?>" style="display:none" value="Delete Peer" onclick="delPeer($(document.wgX),'#index-wgX-<?=$i?>')">
+  <input type="button" class="form zone<?=$i?>" value="Delete Peer" onclick="delPeer($(document.wgX),'#index-wgX-<?=$i?>')">
   <span class="pin"><i class="fa fa-fw fa-eye eye<?=$i?><?=(file_exists("$etc/peers/peer-$tower-wgX-$i.conf")&&(int)$wgX["TYPE:$i"]!=7)?'':' key-off'?>" style="cursor:pointer" onclick="WGconfig(this,'peer-<?=$tower?>-wgX-<?=$i?>','/peers')" title="_(View Peer Config)_"></i>
   <i class="fa fa-fw fa-key zone<?=$i?><?=$wgX["PublicKey:$i"]?'':' key-off'?>" style="cursor:pointer" onclick="openClose($(document.wgX),null,'div.key<?=$i?>')" title="_(Toggle keys)_"></i>
   <i id="chevron-wgX-<?=$i?>" class="fa fa-fw fa-chevron-down" style="cursor:pointer" onclick="openClose($(document.wgX),this,'div.zone<?=$i?>')" title="_(Toggle view)_"></i></span>
@@ -372,7 +372,6 @@ _(Persistent keepalive)_:
 <div markdown="1" id="index-wgX-INDEX" class="shade-<?=$display['theme']?>">
 _(Peer name)_:
 : <span class="input"><input type="text" name="Name:INDEX" class="wide" maxlength="99" value="" onchange="quickValidate(this);" pattern="<?=$validname?>" title="_(Use only letters A-Z, digits or space,dash,underscore)_" placeholder="(_(optional)_)"></span>
-  <input type="button" class="form advanced zoneINDEX" style="display:none" value="_(Delete Peer)_" onclick="delPeer($(document.wgX),'#index-wgX-INDEX')">
   <span class="pin"><i class="fa fa-fw fa-eye eyeINDEX key-off" title="_(Show Peer Config)_"></i>
   <i class="fa fa-fw fa-key zoneINDEX key-off" title="_(Toggle keys)_"></i>
   <i id="chevron-wgX-INDEX" class="fa fa-fw fa-chevron-down" style="cursor:pointer" onclick="openClose($(document.wgX),this,'div.zoneINDEX')" title="_(Toggle view)_"></i></span>
