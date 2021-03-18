@@ -15,6 +15,7 @@ mkdir -p "${tmpdir}"
 # shellcheck disable=SC2046
 cp --parents -f $(find . -type f ! \( -iname "pkg_build.sh" -o -iname "sftp-config.json" \)) "${tmpdir}/"
 cd "${tmpdir}" || exit 1
+chmod 0755 -R .
 makepkg -l y -c y "${txzfile}"
 rm -rf "${tmpdir}"
 md5=$(md5sum "${txzfile}" | cut -f 1 -d ' ')
