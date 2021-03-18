@@ -287,9 +287,9 @@ function validateForm(form,vtun) {
 }
 function prepareSettings(form,vtun) {
   var subnets = '<?=$subnets?>';
-  var shared = '<?=$hosts?>';
+  var hosts = '<?=$hosts?>';
   var subnets6 = '<?=$subnets6?>';
-  var shared6 = '<?=$hosts6?>';
+  var hosts6 = '<?=$hosts6?>';
   var protocol = form.find('select[name="PROT:0"]').val();
   var listen = form.find('input[name="gui:ListenPort:0"]').val()||netport[vtun];
   var network = form.find('input[name="gui:Network:0"]').val();
@@ -312,21 +312,21 @@ function prepareSettings(form,vtun) {
   switch (protocol) {
   case '46':
     form.find('input[name="#subnets1"]').val(form.find('input[name="Address:0"]').val()+', '+form.find('input[name="Address6:0"]').val()+', '+subnets+', '+subnets6);
-    form.find('input[name="#subnets2"]').val(form.find('input[name="Address:0"]').val()+', '+form.find('input[name="Address6:0"]').val()+', '+subnets+', '+subnets6);
-    form.find('input[name="#shared1"]').val(form.find('input[name="Network:0"]').val()+', '+form.find('input[name="Network6:0"]').val()+', '+shared+', '+shared6);
-    form.find('input[name="#shared2"]').val(form.find('input[name="Network:0"]').val()+', '+form.find('input[name="Network6:0"]').val()+', '+shared+', '+shared6);
+    form.find('input[name="#subnets2"]').val(form.find('input[name="Address:0"]').val()+', '+form.find('input[name="Address6:0"]').val()+', '+hosts+', '+hosts6);
+    form.find('input[name="#shared1"]').val(form.find('input[name="Network:0"]').val()+', '+form.find('input[name="Network6:0"]').val()+', '+subnets+', '+subnets6);
+    form.find('input[name="#shared2"]').val(form.find('input[name="Network:0"]').val()+', '+form.find('input[name="Network6:0"]').val()+', '+hosts+', '+hosts6);
     break;
   case '6':
     form.find('input[name="#subnets1"]').val(form.find('input[name="Address6:0"]').val()+', '+subnets6);
-    form.find('input[name="#subnets2"]').val(form.find('input[name="Address6:0"]').val()+', '+subnets6);
-    form.find('input[name="#shared1"]').val(form.find('input[name="Network6:0"]').val()+', '+shared6);
-    form.find('input[name="#shared2"]').val(form.find('input[name="Network6:0"]').val()+', '+shared6);
+    form.find('input[name="#subnets2"]').val(form.find('input[name="Address6:0"]').val()+', '+hosts6);
+    form.find('input[name="#shared1"]').val(form.find('input[name="Network6:0"]').val()+', '+subnets6);
+    form.find('input[name="#shared2"]').val(form.find('input[name="Network6:0"]').val()+', '+hosts6);
     break;
   default:
     form.find('input[name="#subnets1"]').val(form.find('input[name="Address:0"]').val()+', '+subnets);
-    form.find('input[name="#subnets2"]').val(form.find('input[name="Address:0"]').val()+', '+subnets);
-    form.find('input[name="#shared1"]').val(form.find('input[name="Network:0"]').val()+', '+shared);
-    form.find('input[name="#shared2"]').val(form.find('input[name="Network:0"]').val()+', '+shared);
+    form.find('input[name="#subnets2"]').val(form.find('input[name="Address:0"]').val()+', '+hosts);
+    form.find('input[name="#shared1"]').val(form.find('input[name="Network:0"]').val()+', '+subnets);
+    form.find('input[name="#shared2"]').val(form.find('input[name="Network:0"]').val()+', '+hosts);
     break;
   }
   form.find('select[name^="TYPE:"]').each(function(){if($(this).val()==7){vpn=true;return false};});

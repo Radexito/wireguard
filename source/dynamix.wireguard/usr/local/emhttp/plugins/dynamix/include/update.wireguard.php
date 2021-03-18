@@ -110,7 +110,7 @@ function createFiles($vtun) {
 function parseInput(&$input,&$x) {
   global $conf,$user,$var,$next,$default,$default6;
   foreach ($input as $key => $value) {
-    list($id,$i) = explode(':',$key);
+    [$id,$i] = explode(':',$key);
     if ($i != $next) {
       $conf[] = "\n[Peer]";
       $next = $i;
@@ -157,13 +157,13 @@ function parseInput(&$input,&$x) {
       }
       break;
     case 'TYPE':
-      if ($value==0||$value==4) {
-        list($tag,$ips) = explode('=',$var['subnets1']);
-        list($ip4,$ip6) = explode(', ',$ips);
+      if ($value==0) {
+        [$tag,$ips] = explode('=',$var['subnets1']);
+        [$ip4,$ip6] = explode(', ',$ips);
         $list = ["$tag=$ip4"];
         if ($protocol=='46') $list[] = $ip6;
       } else {
-        $list = array_map('trim',explode(',',$value<4 ? ($value%2 ? $var['subnets2'] : $var['subnets1']) : ($value<6 ? ($value%2 ? $var['shared2'] : $var['shared1']) : $var['default'])));
+        $list = array_map('trim',explode(',',$value<4 ? ($value%2 ? $var['subnets1'] : $var['subnets2']) : ($value<6 ? ($value%2 ? $var['shared1'] : $var['shared2']) : $var['default'])));
       }
       $var['allowedIPs'] = implode(', ',array_map('host',array_filter($list)));
       $var['tunnel'] = ($value==2||$value==3) ? $tunnel : false;
@@ -273,12 +273,12 @@ case 'stats':
   exec('wg show all transfer',$data);
   $reply = [];
   foreach ($shake as $row) {
-    list($wg,$id,$time) = preg_split('/\s+/',$row);
+    [$wg,$id,$time] = preg_split('/\s+/',$row);
     if ($vtun=='*') $reply[] = "$wg;".($time ? $now - $time : 0);
     elseif ($vtun==$wg) $reply[] = $time ? $now - $time : 0;
   }
   foreach ($data as $row) {
-    list($wg,$id,$tx,$rx) = preg_split('/\s+/',$row);
+    [$wg,$id,$tx,$rx] = preg_split('/\s+/',$row);
     if ($vtun=='*'||$vtun==$wg) $reply[$i++] .= ';'.my_scale($rx,$unit,null,-1)." $unit;".my_scale($tx,$unit,null,-1)." $unit";
   }
   echo implode("\0",$reply);
@@ -324,7 +324,7 @@ case 'import':
     $i = $key-1;
     foreach (explode("\n",$entry) as $row) {
       if (ltrim($row)[0]!='#') {
-        list($id,$data) = array_map('trim',explode('=',$row,2));
+        [$id,$data] = array_map('trim',explode('=',$row,2));
         $import["$id:$i"] = $data;
       } elseif ($i>=0) {
         $import["Name:$i"] = substr(trim($row),1);
@@ -334,7 +334,7 @@ case 'import':
   if ($import['PrivateKey:0'] && !$import['PublicKey:0']) $import['PublicKey:0'] = exec("wg pubkey <<<'{$import['PrivateKey:0']}'");
   $import['UPNP:0'] = 'no';
   $import['NAT:0'] = 'no';
-  list($subnet,$mask) = explode('/',$import['Address:0']);
+  [$subnet,$mask] = explode('/',$import['Address:0']);
   if (ipv4($subnet)) {
     $mask = ($mask>0 && $mask<32) ? $mask : 24;
     $import['Network:0'] = long2ip(ip2long($subnet) & (0x100000000-2**(32-$mask))).'/'.$mask;
@@ -397,8 +397,8 @@ case 'upnpc':
   $ip = $_POST['#ip'];
   if ($_POST['#wg']=='active') {
     exec("timeout $t1 stdbuf -o0 upnpc -u $xml -m $link -l 2>/dev/null|grep -Po \"^(ExternalIPAddress = \K.+|.+\KUDP.+>$ip:[0-9]+ 'WireGuard-$vtun')\"",$upnp);
-    list($addr,$upnp) = $upnp;
-    list($type,$rule) = explode(' ',$upnp);
+    [$addr,$upnp] = $upnp;
+    [$type,$rule] = explode(' ',$upnp);
     echo $rule ? "UPnP: $addr:$rule/$type" : "UPnP: forwarding not set";
   } else {
     echo "UPnP: tunnel is inactive";
