@@ -1270,7 +1270,7 @@ DNS servers:
 <div markdown="1" id="index-wg0-<?=$i?>" class="shade-<?=$display['theme']?>">
 _(Peer name)_:
 : <span class="input"><input type="text" name="Name:<?=$i?>" class="wide" maxlength="99" value="<?=$wg0["Name:$i"]?>" onchange="quickValidate(this);" pattern="<?=$validname?>" pattern="<?=$validname?>" title="_(Use only letters A-Z, digits or space,dash,underscore)_" placeholder="(_(optional)_)"></span>
-  <input type="button" class="form zone<?=$i?>" value="_(Delete Peer)_" onclick="delPeer($(document.wg0),'#index-wg0-<?=$i?>')">
+  <input type="button" class="form" value="_(Delete Peer)_" onclick="delPeer($(document.wg0),'#index-wg0-<?=$i?>')">
   <span class="pin"><i class="fa fa-fw fa-eye eye<?=$i?><?=(file_exists("$etc/peers/peer-$tower-wg0-$i.conf")&&(int)$wg0["TYPE:$i"]!=7)?'':' key-off'?>" style="cursor:pointer" onclick="WGconfig(this,'peer-<?=$tower?>-wg0-<?=$i?>','/peers')" title="_(View Peer Config)_"></i>
   <i class="fa fa-fw fa-key zone<?=$i?><?=$wg0["PublicKey:$i"]?'':' key-off'?>" style="cursor:pointer" onclick="openClose($(document.wg0),null,'div.key<?=$i?>')" title="_(Toggle keys)_"></i>
   <i id="chevron-wg0-<?=$i?>" class="fa fa-fw fa-chevron-down" style="cursor:pointer" onclick="openClose($(document.wg0),this,'div.zone<?=$i?>')" title="_(Toggle view)_"></i></span>
