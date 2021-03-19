@@ -167,7 +167,7 @@ function parseInput(&$input,&$x) {
       break;
     case 'PROT':
       $protocol = $value;
-      $user[] = "$id:$i=\"$value\"";
+      $user[] = "$id:0=\"$value\"";
       switch ($protocol) {
         case '46': $var['default']  = "AllowedIPs=$default, $default6"; break;
         case '6' : $var['default']  = "AllowedIPs=$default6"; break;
@@ -193,7 +193,7 @@ function parseInput(&$input,&$x) {
     case 'DROP':
     case 'RULE':
     case 'NAT':
-      $user[] = "$id:$i=\"$value\"";
+      $user[] = "$id:0=\"$value\"";
       break;
     case 'Address':
       $hosts = implode(', ',array_map('host',array_filter(explode(', ',$value))));
