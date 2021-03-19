@@ -726,7 +726,7 @@ function setPool(form,vtun) {
   // ensure Local tunnel network pool is not already in use on this server
   var subnets = '<?=$subnets?>';
   if (subnets.includes(network+"/")) {
-    field.setCustomValidity("_(The 'Local tunnel network pool' cannot be in)_ "+subnets);
+    field.setCustomValidity("_(The Local tunnel network pool cannot be in)_ "+subnets);
     field.reportValidity();
     return false;
   }
@@ -760,7 +760,7 @@ function setPool6(form,vtun) {
   // ensure Local tunnel network pool is not already in use on this server
   var subnets6 = '<?=$subnets6?>';
   if (subnets6.includes(network6+"/")) {
-    field.setCustomValidity("_(The 'Local tunnel network pool IPv6' cannot be in)_ "+subnets6);
+    field.setCustomValidity("_(The Local tunnel network pool IPv6 cannot be in)_ "+subnets6);
     field.reportValidity();
     return false;
   }
