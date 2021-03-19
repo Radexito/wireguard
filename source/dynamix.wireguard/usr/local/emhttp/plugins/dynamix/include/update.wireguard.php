@@ -116,7 +116,7 @@ function createPeerFiles($vtun) {
     $cfgold = @file_get_contents($cfg) ?: '';
     $cfgnew = implode("\n",$peer)."\n";
     if ($cfgnew !== $cfgold) {
-      $list[] = "$vtun: peer $id".($peer[1][0]=='#' ? ' ('.substr($peer[1],1).')' : '');
+      $list[] = "$vtun: peer $id (".($peer[1][0]=='#' ? substr($peer[1],1) : _('no name')).')';
       file_put_contents($cfg,$cfgnew);
       $png = str_replace('.conf','.png',$cfg);
       exec("qrencode -t PNG -r $cfg -o $png");
@@ -273,7 +273,11 @@ case 'update':
   file_put_contents($file,implode("\n",$conf)."\n");
   file_put_contents($cfg,implode("\n",$user)."\n");
   createPeerFiles($vtun);
-  if ($wg) exec("wg-quick up $vtun 2>/dev/null");
+  if ($wg) {
+    file_put_contents("/tmp/wg.tmp","#!/bin/sh\nwg-quick up $vtun 2>/dev/null\n");
+    chmod("/tmp/wg.tmp",0755);
+    exec("at -M -f /tmp/wg.tmp now 2>/dev/null");
+  }
   $save = false;
   break;
 case 'toggle':
