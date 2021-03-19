@@ -12,13 +12,16 @@
 ?>
 <?
 $docroot  = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
+// add translations
+$_SERVER['REQUEST_URI'] = 'settings';
+require_once "$docroot/webGui/include/Translations.php";
+
 $etc      = '/etc/wireguard';
 $validIP4 = "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}";
 $validIP6 = "(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(:|([0-9a-fA-F]{1,4}:)+):(([0-9a-fA-F]{1,4}:)*[0-9a-fA-F]{1,4})?)";
 
 $t1 = '6';  // 6 sec timeout
 $t2 = '12'; // 12 sec timeout
-
 
 function ipv4($ip) {
   return strpos($ip,'.')!==false;
@@ -420,9 +423,9 @@ case 'upnpc':
     exec("timeout $t1 stdbuf -o0 upnpc -u $xml -m $link -l 2>/dev/null|grep -Po \"^(ExternalIPAddress = \K.+|.+\KUDP.+>$ip:[0-9]+ 'WireGuard-$vtun')\"",$upnp);
     [$addr,$upnp] = $upnp;
     [$type,$rule] = explode(' ',$upnp);
-    echo $rule ? "UPnP: $addr:$rule/$type" : "UPnP: forwarding not set";
+    echo $rule ? "UPnP: $addr:$rule/$type" : _("UPnP: forwarding not set");
   } else {
-    echo "UPnP: tunnel is inactive";
+    echo _("UPnP: tunnel is inactive");
   }
   break;
 }
