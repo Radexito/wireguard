@@ -273,11 +273,7 @@ case 'update':
   file_put_contents($file,implode("\n",$conf)."\n");
   file_put_contents($cfg,implode("\n",$user)."\n");
   createPeerFiles($vtun);
-  if ($wg) {
-    file_put_contents("/tmp/wg.tmp","#!/bin/sh\nwg-quick up $vtun 2>/dev/null\n");
-    chmod("/tmp/wg.tmp",0755);
-    exec("at -M -f /tmp/wg.tmp now 2>/dev/null");
-  }
+  if ($wg) exec("wg-quick up $vtun >/dev/null");
   $save = false;
   break;
 case 'toggle':

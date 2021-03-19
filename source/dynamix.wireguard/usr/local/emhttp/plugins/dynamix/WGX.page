@@ -33,6 +33,8 @@ netport['wgX'] = '<?=$netport['wgX']?>';
 netbase6['wgX'] = '<?=$netbase6['wgX']?>';
 netpool6['wgX'] = '<?=$netpool6['wgX']?>';
 
+tstate['wgX'] = "<?=$check_wgX ? 'active' : ''?>";
+
 $(function(){
   var ctrl = "<span class='status vhshift hshift'><i id='block-wgX' class='fa fa-fw fa-chevron-up' style='cursor:pointer' onclick='blockToggle(&quot;wgX&quot;)'></i></span>";
   ctrl += "<span class='even wide'><span class='status vshift label'>_(Autostart)_</span><span class='status vhshift'><input type='checkbox' id='start-wgX' style='display:none'<?=$start_wgX?' checked':''?>></span></span>";
@@ -54,12 +56,12 @@ $(function(){
     var wg = $('#toggle-wgX').is(':checked') ? 'start' : 'stop';
     $.post('/webGui/include/update.wireguard.php',{'#cmd':'toggle','#wg':wg,'#vtun':'wgX'},function(ok){
       if (wg=='start') {
-        if (ok) $.cookie('my-wgX','active',{expires:3650}); else $('#toggle-wgX').switchButton({checked:false});
+        if (ok) tstate['wgX']='active'; else $('#toggle-wgX').switchButton({checked:false});
       } else {
-        if (ok) $.removeCookie('my-wgX'); else $('#toggle-wgX').switchButton({checked:true});
+        if (ok) tstate['wgX']=''; else $('#toggle-wgX').switchButton({checked:true});
       }
 <?if ($wgX['UPNP:0']===''):?>
-      $.post('/webGui/include/update.wireguard.php',{'#cmd':'upnpc','#xml':xml,'#vtun':'wgX','#link':'<?=$link?>','#ip':'<?=$server?>','#wg':$.cookie('my-wgX')},function(data){$('span.upnp.wgX').text(data);});
+      $.post('/webGui/include/update.wireguard.php',{'#cmd':'upnpc','#xml':xml,'#vtun':'wgX','#link':'<?=$link?>','#ip':'<?=$server?>','#wg':tstate['wgX']},function(data){$('span.upnp.wgX').text(data);});
 <?endif;?>
     });
 <?else:?>

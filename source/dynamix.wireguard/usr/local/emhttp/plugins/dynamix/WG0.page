@@ -341,7 +341,7 @@ function prepareSettings(form,vtun) {
   });
   form.find('input[name^="Address6:"]').each(function(){$(this).prop('disabled',true);});
   form.find('input[name^="gui:"]').each(function(){$(this).prop('disabled',true);});
-  form.find('input[name="#wg"]').val($.cookie('my-'+vtun));
+  form.find('input[name="#wg"]').val(tstate[vtun]);
   form.find('input[name="#internet"]').val(ipset(form.find('input[name="#internet"]').val())+':'+listen);
   var upnp = form.find('select[name="UPNP:0"]');
   var postup = form.find('input[name="PostUp:0:0"]');
@@ -1004,6 +1004,10 @@ function getPublicIP(ip,wg,protocol) {
   });
 }
 
+// keep tunnel states in global variable
+var tstate = [];
+tstate['wg0'] = "<?=$check_wg0 ? 'active' : ''?>";
+
 $(function(){
   var form = $(document.wg0);
   var ctrl = "<span class='status vhshift hshift'><i id='block-wg0' class='fa fa-fw fa-chevron-up' style='cursor:pointer' onclick='blockToggle(&quot;wg0&quot;)'></i></span>";
@@ -1025,7 +1029,7 @@ $(function(){
     }
     $('span.upnp').each(function(){
       var vtun = $(this).attr('class').split(' ')[1];
-      $.post('/webGui/include/update.wireguard.php',{'#cmd':'upnpc','#xml':xml,'#vtun':vtun,'#link':'<?=$link?>','#ip':'<?=$server?>','#wg':$.cookie('my-'+vtun)},function(data){$('span.upnp.'+vtun).text(data);});
+      $.post('/webGui/include/update.wireguard.php',{'#cmd':'upnpc','#xml':xml,'#vtun':vtun,'#link':'<?=$link?>','#ip':'<?=$server?>','#wg':tstate[vtun]},function(data){$('span.upnp.'+vtun).text(data);});
     });
     if (xml.desc() != url.desc()) {
       xml = url;
@@ -1045,12 +1049,12 @@ $(function(){
     var wg = $('#toggle-wg0').is(':checked') ? 'start' : 'stop';
     $.post('/webGui/include/update.wireguard.php',{'#cmd':'toggle','#wg':wg,'#vtun':'wg0'},function(ok){
       if (wg=='start') {
-        if (ok) $.cookie('my-wg0','active',{expires:3650}); else $('#toggle-wg0').switchButton({checked:false});
+        if (ok) tstate['wg0']='active'; else $('#toggle-wg0').switchButton({checked:false});
       } else {
-        if (ok) $.removeCookie('my-wg0'); else $('#toggle-wg0').switchButton({checked:true});
+        if (ok) tstate['wg0']=''; else $('#toggle-wg0').switchButton({checked:true});
       }
 <?if ($wg0['UPNP:0']===''):?>
-      $.post('/webGui/include/update.wireguard.php',{'#cmd':'upnpc','#xml':xml,'#vtun':'wg0','#link':'<?=$link?>','#ip':'<?=$server?>','#wg':$.cookie('my-wg0')},function(data){$('span.upnp.wg0').text(data);});
+      $.post('/webGui/include/update.wireguard.php',{'#cmd':'upnpc','#xml':xml,'#vtun':'wg0','#link':'<?=$link?>','#ip':'<?=$server?>','#wg':tstate['wg0']},function(data){$('span.upnp.wg0').text(data);});
 <?endif;?>
     });
 <?else:?>
