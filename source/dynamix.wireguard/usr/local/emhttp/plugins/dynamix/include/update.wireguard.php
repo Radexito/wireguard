@@ -293,24 +293,6 @@ case 'toggle':
     break;
   }
   break;
-case 'stats':
-  require_once "$docroot/webGui/include/Helpers.php";
-  $vtun = $_POST['#vtun'];
-  $now = time(); $i = 0;
-  exec('wg show all latest-handshakes',$shake);
-  exec('wg show all transfer',$data);
-  $reply = [];
-  foreach ($shake as $row) {
-    [$wg,$id,$time] = preg_split('/\s+/',$row);
-    if ($vtun=='*') $reply[] = "$wg;".($time ? $now - $time : 0);
-    elseif ($vtun==$wg) $reply[] = $time ? $now - $time : 0;
-  }
-  foreach ($data as $row) {
-    [$wg,$id,$tx,$rx] = preg_split('/\s+/',$row);
-    if ($vtun=='*'||$vtun==$wg) $reply[$i++] .= ';'.my_scale($rx,$unit,null,-1)." $unit;".my_scale($tx,$unit,null,-1)." $unit";
-  }
-  echo implode("\0",$reply);
-  break;
 case 'ping':
   $addr = $_POST['#addr'];
   echo exec("ping -qc1 -W4 $addr|grep -Po '1 received'");

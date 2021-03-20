@@ -852,31 +852,6 @@ function setAllow6(form,subnet6,i) {
   input.val(list.join(', '));
   lockEye(form,i);
 }
-function statistics(form,vtun) {
-  $.post('/webGui/include/update.wireguard.php',{'#cmd':'stats','#vtun':vtun},function(data){
-    if (data) {
-      var row = data.split('\0');
-      for (var i=1; i < row.length+1; i++) {
-        var info = row[i-1].split(';');
-        if (info[0] > 0) {
-          var hr = parseInt(info[0]/3600);
-          var mn = parseInt(info[0]/60%60);
-          var sc = parseInt(info[0]%60);
-          form.find('.hs-'+i).text(plus(hr,"_(hour)_","_(hours)_",false)+plus(mn,"_(minute)_","_(minutes)_",false)+plus(sc,"_(second)_","_(seconds)_",true)+" _(ago)_");
-        } else {
-          form.find('.hs-'+i).text("_(not received)_");
-        }
-        form.find('.tx-'+i).text(info[1]);
-        form.find('.rx-'+i).text(info[2]);
-      }
-    } else {
-      form.find('span[class^="hs-"]').each(function(){$(this).text("_(tunnel is inactive)_");});
-      form.find('span[class^="tx-"]').each(function(){$(this).text('---');});
-      form.find('span[class^="rx-"]').each(function(){$(this).text('---');});
-    }
-    setTimeout(function(){statistics(form,vtun);},1000);
-  });
-}
 function ping(form,button,field) {
   $(button).val('Pinging...');
   $.post('/webGui/include/update.wireguard.php',{'#cmd':'ping','#addr':form.find(field).val().replace(/\/.+$/,'')},function(reply){
@@ -1009,6 +984,41 @@ function getPublicIP(ip,wg,protocol) {
 var tstate = [];
 tstate['wg0'] = "<?=$check_wg0 ? 'active' : ''?>";
 
+var statistics = new NchanSubscriber('/sub/wireguard');
+statistics.on('message', function(data) {
+  var list = [];
+  var rows = data.split('\0');
+  var x = 0; var vtun = '';
+  // get all existing tunnels
+  $('div[id^="block-wg"]').each(function(){list.push($(this).prop('id').split('-')[1]);});
+  // update active tunnels
+  for (var i=0,row; row=rows[i]; i++) {
+    var info = row.split(';');
+    if (info[0] != vtun) {
+      vtun = info[0];
+      // remove tunnel from inactive list
+      for (var n=0,done; done=list[n]; n++) if (vtun==done) list.splice(n,1);
+      x = 1;
+    } else x++;
+    if (info[1] > 0) {
+      var hr = parseInt(info[1]/3600);
+      var mn = parseInt(info[1]/60%60);
+      var sc = parseInt(info[1]%60);
+      $('.hs-'+vtun+'-'+x).text(plus(hr,"_(hour)_","_(hours)_",false)+plus(mn,"_(minute)_","_(minutes)_",false)+plus(sc,"_(second)_","_(seconds)_",true)+" _(ago)_");
+    } else {
+      $('.hs-'+vtun+'-'+x).text("_(not received)_");
+    }
+    $('.tx-'+vtun+'-'+x).text(info[2]);
+    $('.rx-'+vtun+'-'+x).text(info[2]);
+  }
+  // update inactive tunnels
+  for (var i=0,vtun; vtun=list[i]; i++) {
+    $('span[class^="hs-'+vtun+'"]').each(function(){$(this).text("_(tunnel is inactive)_");});
+    $('span[class^="tx-'+vtun+'"]').each(function(){$(this).text('---');});
+    $('span[class^="rx-'+vtun+'"]').each(function(){$(this).text('---');});
+  }
+});
+
 $(function(){
   var form = $(document.wg0);
   var ctrl = "<span class='status vhshift hshift'><i id='block-wg0' class='fa fa-fw fa-chevron-up' style='cursor:pointer' onclick='blockToggle(&quot;wg0&quot;)'></i></span>";
@@ -1095,9 +1105,6 @@ $(function(){
       }});
     }
   });
-<?if ($this_wg0):?>
-  statistics(form,'wg0');
-<?endif;?>
   showRemark(form);
   setProtocol(form,'wg0');
   form.find('input[name^="Address:"]').each(function(){
@@ -1138,6 +1145,7 @@ $(function(){
   setTimeout(function(){swal({title:"_(Peer update required)_",text:"<b><u>_(List of peers)_</u></b><br><span style='display:inline-block;text-align:left'><?=file_get_contents($tmp)?></span>",type:'warning',html:true});},200);
 <?unlink($tmp);?>
 <?endif;?>
+  statistics.start();
 });
 </script>
 <input type='file' id='file' accept='.conf' onchange='importFile(this.files[0])' style='display:none'>
@@ -1361,8 +1369,8 @@ _(Persistent keepalive)_:
 :wg_persistent_keepalive_help:
 
 </div>
-<span class="pin next">_(Data sent)_: <span class="tx-<?=$i?>">0 B</span>_(Data received)_: <span class="rx-<?=$i?>">0 B</span></span>
-<span class="pin">_(Last handshake)_: <span class="hs-<?=$i?>">_(unknown)_</span></span>
+<span class="pin next">_(Data sent)_: <span class="tx-wg0-<?=$i?>">0 B</span>_(Data received)_: <span class="rx-wg0-<?=$i?>">0 B</span></span>
+<span class="pin">_(Last handshake)_: <span class="hs-wg0-<?=$i?>">_(unknown)_</span></span>
 </div>
 <?endforeach;?>
 
