@@ -1009,7 +1009,7 @@ statistics.on('message', function(data) {
       $('.hs-'+vtun+'-'+x).text("_(not received)_");
     }
     $('.tx-'+vtun+'-'+x).text(info[2]);
-    $('.rx-'+vtun+'-'+x).text(info[2]);
+    $('.rx-'+vtun+'-'+x).text(info[3]);
   }
   // update inactive tunnels
   for (var i=0,vtun; vtun=list[i]; i++) {
