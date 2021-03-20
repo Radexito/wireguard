@@ -296,7 +296,7 @@ _(Peer type of access)_:
   <?=mk_option($wgX["TYPE:$i"], "4", _("Server hub & spoke access"))?>
   <?=mk_option($wgX["TYPE:$i"], "5", _("LAN hub & spoke access"))?>
   <?=mk_option($wgX["TYPE:$i"], "6", _("Remote tunneled access"))?>
-  <?=mk_option($wgX["TYPE:$i"], "7", _("VPN tunneled access"))?>
+  <?=mk_option($wgX["TYPE:$i"], "7", _("VPN tunneled access"),count($peer_wgX)==1?'':'disabled')?>
   </select></span>
   <span id="access-type-<?=$i?>" class="access-type"></span>
 
@@ -390,7 +390,7 @@ _(Peer type of access)_:
   <?=mk_option(0, "4", _("Server hub & spoke access"))?>
   <?=mk_option(0, "5", _("LAN hub & spoke access"))?>
   <?=mk_option(0, "6", _("Remote tunneled access"))?>
-  <?=mk_option(0, "7", _("VPN tunneled access"))?>
+  <?=mk_option(0, "7", _("VPN tunneled access"),'disabled')?>
   </select></span>
   <span id="access-type-INDEX" class="access-type"></span>
 

@@ -503,6 +503,7 @@ function addPeer(form,vtun) {
   var template = $($('<div/>').loadTemplate($('#peer-template-'+vtun)).html().replace(/INDEX/g,i));
   var peer = i==1 ? $('div#peers-list-'+vtun) : $('[id^="index-'+vtun+'-"]').last();
   $(peer).after(template);
+  if (i==1) form.find('select[name="TYPE:1"] option:last').prop('disabled',false);
   var address = [], address6 = [];
   var protocol = form.find('select[name="PROT:0"]').val();
   if (protocol!='6') {
@@ -1294,7 +1295,7 @@ _(Peer type of access)_:
   <?=mk_option($wg0["TYPE:$i"], "4", _("Server hub & spoke access"))?>
   <?=mk_option($wg0["TYPE:$i"], "5", _("LAN hub & spoke access"))?>
   <?=mk_option($wg0["TYPE:$i"], "6", _("Remote tunneled access"))?>
-  <?=mk_option($wg0["TYPE:$i"], "7", _("VPN tunneled access"))?>
+  <?=mk_option($wg0["TYPE:$i"], "7", _("VPN tunneled access"),count($peer_wg0)==1?'':'disabled')?>
   </select></span>
   <span id="access-type-<?=$i?>" class="access-type"></span>
 
@@ -1388,7 +1389,7 @@ _(Peer type of access)_:
   <?=mk_option(0, "4", _("Server hub & spoke access"))?>
   <?=mk_option(0, "5", _("LAN hub & spoke access"))?>
   <?=mk_option(0, "6", _("Remote tunneled access"))?>
-  <?=mk_option(0, "7", _("VPN tunneled access"))?>
+  <?=mk_option(0, "7", _("VPN tunneled access"),'disabled')?>
   </select></span>
   <span id="access-type-INDEX" class="access-type"></span>
 
