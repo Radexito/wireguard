@@ -116,7 +116,7 @@ function createPeerFiles($vtun) {
     $cfgold = @file_get_contents($cfg) ?: '';
     $cfgnew = implode("\n",$peer)."\n";
     if ($cfgnew !== $cfgold) {
-      $list[] = "$vtun: peer $id (".($peer[1][0]=='#' ? substr($peer[1],1) : _('no name')).')';
+      $list[] = "$vtun: peer $id (".($peer[1][0]=='#' ? substr($peer[1],1) : '').')';
       file_put_contents($cfg,$cfgnew);
       $png = str_replace('.conf','.png',$cfg);
       exec("qrencode -t PNG -r $cfg -o $png");

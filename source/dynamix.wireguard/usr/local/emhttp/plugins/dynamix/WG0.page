@@ -1148,7 +1148,7 @@ $(function(){
   else if (form.find('select[name="NAT:0"]').val()=='no' && lan) $('span#my-static1-wg0').show();
   else if (lan) $('span#my-static2-wg0').show();
 <?if (file_exists($tmp)):?>
-  setTimeout(function(){swal({title:"_(Peer update required)_",text:"<b><u>_(List of peers)_</u></b><br><span style='display:inline-block;text-align:left'><?=file_get_contents($tmp)?></span>",type:'warning',html:true});},200);
+  setTimeout(function(){swal({title:"_(Peer update required)_",text:"<b><u>_(List of peers)_</u></b><br><span style='display:inline-block;text-align:left'><?=str_replace('()','(_(no name)_)',file_get_contents($tmp))?></span>",type:'warning',html:true});},200);
 <?unlink($tmp);?>
 <?endif;?>
   statistics.start();
