@@ -179,14 +179,7 @@ function parseInput(&$input,&$x) {
       break;
     case 'TYPE':
       if ($value==0) {
-        // return tunnel and lan host address
         $list = array_map('trim',explode(',',$var['subnets2']));
-        /*
-        [$tag,$ips] = explode('=',$var['subnets1']);
-        [$ip4,$ip6] = explode(', ',$ips);
-        $list = ["$tag=$ip4"];
-        if ($protocol=='46') $list[] = $ip6;
-        */
       } else {
         $list = array_map('trim',explode(',',$value<4 ? ($value%2 ? $var['subnets1'] : $var['subnets2']) : ($value<6 ? ($value%2 ? $var['shared1'] : $var['shared2']) : $var['default'])));
       }
