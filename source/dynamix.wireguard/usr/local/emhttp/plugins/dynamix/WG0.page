@@ -190,7 +190,7 @@ span.even{float:right;display:inline-block;width:150px;margin-top:3px}
 span.even.wide{width:200px}
 span.pin{float:right;margin:-28px 12px 0 0;clear:both}
 span.pin.next{margin-top:-48px}
-span[class^=tx]{margin-right:40px}
+span[class^=rx]{margin-right:40px}
 span.hshift{margin-right:<?=$themes1?'-7':'11'?>px!important}
 span.vshift{margin-top:-2px!important}
 span.label{font-size:1.1rem;text-transform:uppercase;letter-spacing:1px;margin-left:<?=$themes1?'-12':'-4'?>px}
@@ -1008,8 +1008,8 @@ statistics.on('message', function(data) {
     } else {
       $('.hs-'+vtun+'-'+x).text("_(not received)_");
     }
-    $('.tx-'+vtun+'-'+x).text(info[2]);
-    $('.rx-'+vtun+'-'+x).text(info[3]);
+    $('.rx-'+vtun+'-'+x).text(info[2]);
+    $('.tx-'+vtun+'-'+x).text(info[3]);
   }
   // update inactive tunnels
   for (var i=0,vtun; vtun=list[i]; i++) {
@@ -1267,7 +1267,7 @@ _(MTU size)_:
 :wg_mtu_size_help:
 
 <!--
-DNS servers:
+_(DNS servers)_:
 : <span class="input"><input type="text" name="DNS:0" class="wide" value="" placeholder="(_(optional)_)"></span>
 
 > Not used at the moment. It gives errors when used together with Unraid.
@@ -1369,7 +1369,7 @@ _(Persistent keepalive)_:
 :wg_persistent_keepalive_help:
 
 </div>
-<span class="pin next">_(Data sent)_: <span class="tx-wg0-<?=$i?>">0 B</span>_(Data received)_: <span class="rx-wg0-<?=$i?>">0 B</span></span>
+<span class="pin next">_(Data received)_: <span class="rx-wg0-<?=$i?>">0 B</span>_(Data sent)_: <span class="tx-wg0-<?=$i?>">0 B</span></span>
 <span class="pin">_(Last handshake)_: <span class="hs-wg0-<?=$i?>">_(unknown)_</span></span>
 </div>
 <?endforeach;?>

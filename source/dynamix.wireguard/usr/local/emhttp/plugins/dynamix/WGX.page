@@ -359,7 +359,7 @@ _(Persistent keepalive)_:
 :wg_persistent_keepalive_help:
 
 </div>
-<span class="pin next">_(Data sent)_: <span class="tx-wgX-<?=$i?>">0 B</span>_(Data received)_: <span class="rx-wgX-<?=$i?>">0 B</span></span>
+<span class="pin next">_(Data received)_: <span class="rx-wgX-<?=$i?>">0 B</span>_(Data sent)_: <span class="tx-wgX-<?=$i?>">0 B</span></span>
 <span class="pin">_(Last handshake)_: <span class="hs-wgX-<?=$i?>">_(unknown)_</span></span>
 </div>
 <?endforeach;?>
