@@ -40,17 +40,11 @@ function my_scale($value, &$unit) {
 
 while (true) {
   $now = time(); $i = 0;
-  unset($handshake,$transfer);
-  exec('wg show all latest-handshakes',$handshake);
-  exec('wg show all transfer',$transfer);
-  $vtun = [];
-  foreach ($handshake as $row) {
-    [$wg,$id,$time] = preg_split('/\s+/',$row);
-    $vtun[] = "$wg;".($time ? $now - $time : 0);
-  }
-  foreach ($transfer as $row) {
-    [$wg,$id,$tx,$rx] = preg_split('/\s+/',$row);
-    $vtun[$i++] .= ';'.my_scale($rx,$unit)." $unit;".my_scale($tx,$unit)." $unit";
+  unset($dump);   $vtun = [];
+  exec('wg show all dump',$dump);
+  foreach ($dump as $row) {
+    $row = preg_split('/\s+/',$row);
+    if (count($row)>5) $vtun[] = $row[0].';'.($row[5] ? $now - $row[5] : 0).';'.my_scale($row[6],$unit)." $unit;".my_scale($row[7],$unit)." $unit";
   }
   publish('wireguard', implode("\0",$vtun));
   sleep(1);
