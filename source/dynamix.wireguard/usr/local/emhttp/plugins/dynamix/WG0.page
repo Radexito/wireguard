@@ -195,7 +195,7 @@ span.hshift{margin-right:<?=$themes1?'-7':'11'?>px!important}
 span.vshift{margin-top:-2px!important}
 span.label{font-size:1.1rem;text-transform:uppercase;letter-spacing:1px;margin-left:<?=$themes1?'-12':'-4'?>px}
 span.input{display:inline-block;width:420px}
-span.access-type{display:inline-block;width:30%;white-space:normal}
+span.access-type{display:inline-block;width:28%;white-space:normal}
 span.block{display:inline-block;width:43%;white-space:normal}
 div.shade-white{background-color:#ededed;margin-top:10px;padding:8px 0 3px 0}
 div.shade-black{background-color:#212121;margin-top:10px;padding:8px 0 3px 0}
@@ -897,17 +897,24 @@ function showAccess(form,i,n) {
   switch (n) {
     case '0': 
       switch (form.find('select[name="PROT:0"]').val()) {
-        case '6' : var tunnel_addr = form.find('input[name="Address6:0"]').val()+"</b>"; break;
-        case '46': var tunnel_addr = form.find('input[name="Address:0"]').val()+"</b> _(or)_ <b>"+form.find('input[name="Address6:0"]').val()+"</b>"; break;
-        default  : var tunnel_addr = form.find('input[name="Address:0"]').val()+"</b>"; break;
+        case '6' : var peer_addr = form.find('input[name="Address6:0"]').val()+"</b>"; break;
+        case '46': var peer_addr = form.find('input[name="Address:0"]').val()+"</b> _(or)_ <b>"+form.find('input[name="Address6:0"]').val()+"</b>"; break;
+        default  : var peer_addr = form.find('input[name="Address:0"]').val()+"</b>"; break;
       }
-      form.find('span#access-type-'+i).html("_(Remark)_: _(connect to this server using IP address)_ <b>"+tunnel_addr);
+      form.find('span#access-type-'+i).html("_(Remark)_: _(connect to this server using IP address)_ <b>"+peer_addr);
       break;
     case '1':
     case '2':
     case '3':
     case '6': form.find('span#access-type-'+i).html("_(Remark)_: _(ensure the peer network is different from)_ <b><?=exec("ip -4 route show dev $link scope link|awk '{print \$1;exit}'")?></b>"); break;
-    case '4': form.find('span#access-type-'+i).html("_(Remark)_: _(connect to any device on the VPN tunnel)_ <b>"+form.find('input[name="gui:Network:0"]').val()+'/'+(form.find('input[name="gui:Mask:0"]').val()||24)+'</b>'); break;
+    case '4':
+      switch (form.find('select[name="PROT:0"]').val()) {
+        case '6' : var peer_net = form.find('input[name="gui:Network6:0"]').val()+'/'+(form.find('input[name="gui:Mask6:0"]').val()||64)+"</b>"; break;
+        case '46': var peer_net = form.find('input[name="gui:Network:0"]').val()+'/'+(form.find('input[name="gui:Mask:0"]').val()||24)+"</b> _(or)_ <b>"+form.find('input[name="gui:Network6:0"]').val()+'/'+(form.find('input[name="gui:Mask6:0"]').val()||64)+"</b>"; break;
+        default  : var peer_net = form.find('input[name="gui:Network:0"]').val()+'/'+(form.find('input[name="gui:Mask:0"]').val()||24)+"</b>"; break;
+      }
+      form.find('span#access-type-'+i).html("_(Remark)_: _(connect to any device on the VPN tunnel)_ <b>"+peer_net);
+      break;
     case '5': form.find('span#access-type-'+i).html("_(Remark)_: _(ensure the peer networks are different from)_ <b><?=exec("ip -4 route show dev $link scope link|awk '{print \$1;exit}'")?></b>"); break;
     case '7': form.find('span#access-type-'+i).html("_(Remark)_: _(this must be the only peer in the tunnel and sole active tunnel when in use)_"); break;
   }
