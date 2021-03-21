@@ -980,6 +980,12 @@ function getPublicIP(ip,wg,protocol) {
   });
 }
 
+function sprintf() {
+  var text = arguments[0];
+  for (var i=1,arg; arg=arguments[i]; i++) text = text.replace('%s',arg);
+  return text;
+}
+
 // keep tunnel states in global variable
 var tstate = [];
 tstate['wg0'] = "<?=$check_wg0 ? 'active' : ''?>";
@@ -1004,7 +1010,7 @@ statistics.on('message', function(data) {
       var hr = parseInt(info[1]/3600);
       var mn = parseInt(info[1]/60%60);
       var sc = parseInt(info[1]%60);
-      $('.hs-'+vtun+'-'+x).text(plus(hr,"_(hour)_","_(hours)_",false)+plus(mn,"_(minute)_","_(minutes)_",false)+plus(sc,"_(second)_","_(seconds)_",true)+" _(ago)_");
+      $('.hs-'+vtun+'-'+x).text(sprintf("_(%s ago)_",plus(hr,"_(hour)_","_(hours)_",false)+plus(mn,"_(minute)_","_(minutes)_",false)+plus(sc,"_(second)_","_(seconds)_",true)));
     } else {
       $('.hs-'+vtun+'-'+x).text("_(not received)_");
     }
