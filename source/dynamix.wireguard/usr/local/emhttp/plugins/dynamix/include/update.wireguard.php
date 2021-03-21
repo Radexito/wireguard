@@ -111,7 +111,7 @@ function createPeerFiles($vtun) {
   }
   $list = [];
   foreach ($peers as $id => $peer) {
-    if (empty($peer[1])) break; // peer config doesn't exist yet
+    if (empty($peer[1])) break; // tunnel without any peers
     $cfg    = "$dir/peer-$name-$vtun-$id.conf";
     $cfgold = @file_get_contents($cfg) ?: '';
     $cfgnew = implode("\n",$peer)."\n";
