@@ -519,22 +519,22 @@ function addPeer(form,vtun) {
   switch (protocol) {
   case '46':
     var data = ip+', '+ip6;
-    form.find('input[name="Address:'+i+'"]').attr('placeholder','(mandatory)').prop('required',true);
-    form.find('input[name="Address6:'+i+'"]').attr('placeholder','(mandatory)').prop('required',true);
+    form.find('input[name="Address:'+i+'"]').attr('placeholder',"(_(mandatory)_)").prop('required',true);
+    form.find('input[name="Address6:'+i+'"]').attr('placeholder',"(_(mandatory)_)").prop('required',true);
     $('div[class="ipv4 '+vtun+'"]').show();
     $('div[class="ipv6 '+vtun+'"]').show();
     break;
   case '6':
     var data = ip6;
-    form.find('input[name="Address:'+i+'"]').attr('placeholder','(not used)').removeAttr('required').val('');
-    form.find('input[name="Address6:'+i+'"]').attr('placeholder','(mandatory)').prop('required',true);
+    form.find('input[name="Address:'+i+'"]').attr('placeholder',"(_(not used)_)").removeAttr('required').val('');
+    form.find('input[name="Address6:'+i+'"]').attr('placeholder',"(_(mandatory)_)").prop('required',true);
     $('div[class="ipv4 '+vtun+'"]').hide();
     $('div[class="ipv6 '+vtun+'"]').show();
     break;
   default:
     var data = ip;
-    form.find('input[name="Address:'+i+'"]').attr('placeholder','(mandatory)').prop('required',true);
-    form.find('input[name="Address6:'+i+'"]').attr('placeholder','(not used)').removeAttr('required').val('');
+    form.find('input[name="Address:'+i+'"]').attr('placeholder',"(_(mandatory)_)").prop('required',true);
+    form.find('input[name="Address6:'+i+'"]').attr('placeholder',"(_(not used)_)").removeAttr('required').val('');
     $('div[class="ipv4 '+vtun+'"]').show();
     $('div[class="ipv6 '+vtun+'"]').hide();
     break;
@@ -593,19 +593,19 @@ function updatePeer(form,i,n,vtun) {
     form.find('input[name="Endpoint:0"]').attr('placeholder',unraid);
     form.find('input[name="gui:ListenPort:0"]').attr('placeholder',netport[vtun]);
     form.find('select[name="NAT:0"]').prop('disabled',false);
-    form.find('input[name="gui:Endpoint:'+i+'"]').attr('placeholder','(not used)').removeAttr('required').val('');
+    form.find('input[name="gui:Endpoint:'+i+'"]').attr('placeholder',"(_(not used)_)").removeAttr('required').val('');
     form.find('input[name="gui:ListenPort:'+i+'"]').removeAttr('placeholder').val('');
-    form.find('input[name="DNS:'+i+'"]').attr('placeholder','(optional)');
+    form.find('input[name="DNS:'+i+'"]').attr('placeholder',"(_(optional)_)");
     break;
   case '7':
-    form.find('input[name="Endpoint:0"]').attr('placeholder','(not used)');
+    form.find('input[name="Endpoint:0"]').attr('placeholder',"(_(not used)_)");
     form.find('input[name="gui:ListenPort:0"]').removeAttr('placeholder');
     form.find('select[name="NAT:0"]').prop('disabled',true);
-    form.find('input[name="gui:Endpoint:'+i+'"]').attr('placeholder','(mandatory)').prop('required',true);
+    form.find('input[name="gui:Endpoint:'+i+'"]').attr('placeholder',"(_(mandatory)_)").prop('required',true);
     form.find('input[name="gui:ListenPort:'+i+'"]').attr('placeholder',form.find('input[name="gui:ListenPort:0"]').val()||netport[vtun]);
-    form.find('input[name="Address:'+i+'"]').attr('placeholder','(not used)').removeAttr('required');
-    form.find('input[name="Address6:'+i+'"]').attr('placeholder','(not used)').removeAttr('required');
-    form.find('input[name="DNS:'+i+'"]').attr('placeholder','(not used)');
+    form.find('input[name="Address:'+i+'"]').attr('placeholder',"(_(not used)_)").removeAttr('required');
+    form.find('input[name="Address6:'+i+'"]').attr('placeholder',"(_(not used)_)").removeAttr('required');
+    form.find('input[name="DNS:'+i+'"]').attr('placeholder',"(_(not used)_)");
     if (icon.hasClass('fa-chevron-down')) openClose(form,icon,'div.zone'+i);
     break;
   default:
@@ -613,14 +613,14 @@ function updatePeer(form,i,n,vtun) {
     form.find('input[name="gui:ListenPort:0"]').attr('placeholder',netport[vtun]);
     form.find('select[name="NAT:0"]').prop('disabled',false);
     if (n=='2'||n=='3') {
-      form.find('input[name="gui:Endpoint:'+i+'"]').attr('placeholder','(mandatory)').prop('required',true);
+      form.find('input[name="gui:Endpoint:'+i+'"]').attr('placeholder',"(_(mandatory)_)").prop('required',true);
       form.find('input[name="gui:ListenPort:'+i+'"]').attr('placeholder',form.find('input[name="gui:ListenPort:0"]').val()||netport[vtun]);
       if (icon.hasClass('fa-chevron-down')) openClose(form,icon,'div.zone'+i);
     } else {
-      form.find('input[name="gui:Endpoint:'+i+'"]').attr('placeholder','(not used)').removeAttr('required').val('');
+      form.find('input[name="gui:Endpoint:'+i+'"]').attr('placeholder',"(_(not used)_)").removeAttr('required').val('');
       form.find('input[name="gui:ListenPort:'+i+'"]').removeAttr('placeholder').val('');
     }
-    form.find('input[name="DNS:'+i+'"]').attr('placeholder','(optional)');
+    form.find('input[name="DNS:'+i+'"]').attr('placeholder',"(_(optional)_)");
     break;
   }
   var subnet = form.find('input[name="Address:'+i+'"]').val();
@@ -649,17 +649,17 @@ function setProtocol(form,vtun,update) {
     form.find('input[name^="Address:"]').each(function(){
       var i = $(this).attr('name').split(':')[1];
       if (i==0) {
-        $(this).attr('placeholder',"_(mandatory)_").prop('required',true);
+        $(this).attr('placeholder',"(_(mandatory)_)").prop('required',true);
       } else {
-        if (form.find('select[name="TYPE:'+i+'"]').val()<7) $(this).attr('placeholder',"_(mandatory)_").prop('required',true); else $(this).attr('placeholder',"_(not used)_").removeAttr('required');
+        if (form.find('select[name="TYPE:'+i+'"]').val()<7) $(this).attr('placeholder',"(_(mandatory)_)").prop('required',true); else $(this).attr('placeholder',"(_(not used)_)").removeAttr('required');
       }
     });
     form.find('input[name^="Address6:"]').each(function(){
       var i = $(this).attr('name').split(':')[1];
       if (i==0) {
-        $(this).attr('placeholder',"_(mandatory)_").prop('required',true);
+        $(this).attr('placeholder',"(_(mandatory)_)").prop('required',true);
       } else {
-        if (form.find('select[name="TYPE:'+i+'"]').val()<7) $(this).attr('placeholder',"_(mandatory)_").prop('required',true); else $(this).attr('placeholder',"_(not used)_").removeAttr('required');
+        if (form.find('select[name="TYPE:'+i+'"]').val()<7) $(this).attr('placeholder',"(_(mandatory)_)").prop('required',true); else $(this).attr('placeholder',"(_(not used)_)").removeAttr('required');
       }
     });
     if (update) {
@@ -670,13 +670,13 @@ function setProtocol(form,vtun,update) {
   case '6':
     $('div[class="ipv4 '+vtun+'"]').hide();
     $('div[class="ipv6 '+vtun+'"]').show();
-    form.find('input[name^="Address:"]').each(function(){$(this).attr('placeholder',"_(not used)_").removeAttr('required').val('');});
+    form.find('input[name^="Address:"]').each(function(){$(this).attr('placeholder',"(_(not used)_)").removeAttr('required').val('');});
     form.find('input[name^="Address6:"]').each(function(){
       var i = $(this).attr('name').split(':')[1];
       if (i==0) {
-        $(this).attr('placeholder',"_(mandatory)_").prop('required',true);
+        $(this).attr('placeholder',"(_(mandatory)_)").prop('required',true);
       } else {
-        if (form.find('select[name="TYPE:'+i+'"]').val()<7) $(this).attr('placeholder',"_(mandatory)_").prop('required',true); else $(this).attr('placeholder',"_(not used)_").removeAttr('required');
+        if (form.find('select[name="TYPE:'+i+'"]').val()<7) $(this).attr('placeholder',"(_(mandatory)_)").prop('required',true); else $(this).attr('placeholder',"(_(not used)_)").removeAttr('required');
       }
     });
     if (update) {
@@ -686,13 +686,13 @@ function setProtocol(form,vtun,update) {
   default:
     $('div[class="ipv4 '+vtun+'"]').show();
     $('div[class="ipv6 '+vtun+'"]').hide();
-    form.find('input[name^="Address6:"]').each(function(){$(this).attr('placeholder',"_(not used)_").removeAttr('required').val('');});
+    form.find('input[name^="Address6:"]').each(function(){$(this).attr('placeholder',"(_(not used)_)").removeAttr('required').val('');});
     form.find('input[name^="Address:"]').each(function(){
       var i = $(this).attr('name').split(':')[1];
       if (i==0) {
-        $(this).attr('placeholder',"_(mandatory)_").prop('required',true);
+        $(this).attr('placeholder',"(_(mandatory)_)").prop('required',true);
       } else {
-        if (form.find('select[name="TYPE:'+i+'"]').val()<7) $(this).attr('placeholder',"_(mandatory)_").prop('required',true); else $(this).attr('placeholder',"_(not used)_").removeAttr('required');
+        if (form.find('select[name="TYPE:'+i+'"]').val()<7) $(this).attr('placeholder',"(_(mandatory)_)").prop('required',true); else $(this).attr('placeholder',"(_(not used)_)").removeAttr('required');
       }
     });
     if (update) {
@@ -895,13 +895,20 @@ function showRoute(form,vtun,i) {
 }
 function showAccess(form,i,n) {
   switch (n) {
-    case '0': form.find('span#access-type-'+i).html("_(Remark)_: _(connect to this server using IP address)_ <b>"+form.find('input[name="Address:0"]').val()+'</b>'); break;
+    case '0': 
+      switch (form.find('select[name="PROT:0"]').val()) {
+        case '6' : var tunnel_addr = form.find('input[name="Address6:0"]').val()+"</b>"; break;
+        case '46': var tunnel_addr = form.find('input[name="Address:0"]').val()+"</b> _(or)_ <b>"+form.find('input[name="Address6:0"]').val()+"</b>"; break;
+        default  : var tunnel_addr = form.find('input[name="Address:0"]').val()+"</b>"; break;
+      }
+      form.find('span#access-type-'+i).html("_(Remark)_: _(connect to this server using IP address)_ <b>"+tunnel_addr);
+      break;
     case '1':
     case '2':
     case '3':
-    case '6': form.find('span#access-type-'+i).html("_(Remark)_: _(ensure the peer network is different from)_ <b><?=exec("ip -4 route show dev $link scope link|awk '{print \$1}'")?></b>"); break;
+    case '6': form.find('span#access-type-'+i).html("_(Remark)_: _(ensure the peer network is different from)_ <b><?=exec("ip -4 route show dev $link scope link|awk '{print \$1;exit}'")?></b>"); break;
     case '4': form.find('span#access-type-'+i).html("_(Remark)_: _(connect to any device on the VPN tunnel)_ <b>"+form.find('input[name="gui:Network:0"]').val()+'/'+(form.find('input[name="gui:Mask:0"]').val()||24)+'</b>'); break;
-    case '5': form.find('span#access-type-'+i).html("_(Remark)_: _(ensure the peer networks are different from)_ <b><?=exec("ip -4 route show dev $link scope link|awk '{print \$1}'")?></b>"); break;
+    case '5': form.find('span#access-type-'+i).html("_(Remark)_: _(ensure the peer networks are different from)_ <b><?=exec("ip -4 route show dev $link scope link|awk '{print \$1;exit}'")?></b>"); break;
     case '7': form.find('span#access-type-'+i).html("_(Remark)_: _(this must be the only peer in the tunnel and sole active tunnel when in use)_"); break;
   }
 }

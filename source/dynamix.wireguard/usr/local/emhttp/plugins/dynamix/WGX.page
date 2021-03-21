@@ -258,7 +258,7 @@ _(MTU size)_:
 :wg_mtu_size_help:
 
 <!--
-DNS servers:
+_(DNS servers)_:
 : <span class="input"><input type="text" name="DNS:0" class="wide" value="" placeholder="(_(optional)_)"></span>
 
 > Not used at the moment. It gives errors when used together with Unraid.
