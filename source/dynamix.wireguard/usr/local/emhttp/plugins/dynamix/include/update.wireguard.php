@@ -178,11 +178,7 @@ function parseInput(&$input,&$x) {
       }
       break;
     case 'TYPE':
-      if ($value==0) {
-        $list = array_map('trim',explode(',',$var['subnets2']));
-      } else {
-        $list = array_map('trim',explode(',',$value<4 ? ($value%2 ? $var['subnets1'] : $var['subnets2']) : ($value<6 ? ($value%2 ? $var['shared1'] : $var['shared2']) : $var['default'])));
-      }
+      $list = array_map('trim',explode(',',$value<4 ? ($value%2==1 ? $var['subnets1'] : $var['subnets2']) : ($value<6 ? ($value%2==1 ? $var['shared1'] : $var['shared2']) : $var['default'])));
       $var['allowedIPs'] = implode(', ',array_map('host',array_filter($list)));
       $var['tunnel'] = ($value==2||$value==3) ? $tunnel : false;
       $user[] = "$id:$x=\"$value\"";
