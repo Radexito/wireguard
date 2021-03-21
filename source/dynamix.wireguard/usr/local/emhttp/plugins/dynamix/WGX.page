@@ -154,6 +154,7 @@ $(function(){
 <input type="hidden" name="#shared1" value="">
 <input type="hidden" name="#shared2" value="">
 <input type="hidden" name="#deleted" value="">
+<input type="hidden" name="#locale" value="<?=$locale?>">
 _(Local name)_:
 : <span class="input"><input type="text" name="Name:0" class="wide" maxlength="99" value="<?=$wgX["Name:0"]?>" pattern="<?=$validname?>" title="_(Use only letters A-Z, digits or space,dash,underscore)_" placeholder="(_(optional)_)"></span>
   <span class="pin"><i class="fa fa-fw fa-eye eye0<?=$this_wgX?'':' key-off'?>" style="cursor:pointer" onclick="WGconfig(this,'wgX','')" title="_(View Local Config)_"></i>

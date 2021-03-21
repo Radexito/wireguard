@@ -14,6 +14,8 @@
 $docroot  = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 // add translations
 $_SERVER['REQUEST_URI'] = 'settings';
+// special case when script is called on form-submit and processed by update.php
+if (!isset($_SESSION['locale'])) $_SESSION['locale'] = $_POST['#locale'];
 require_once "$docroot/webGui/include/Translations.php";
 
 $etc      = '/etc/wireguard';
@@ -116,7 +118,7 @@ function createPeerFiles($vtun) {
     $cfgold = @file_get_contents($cfg) ?: '';
     $cfgnew = implode("\n",$peer)."\n";
     if ($cfgnew !== $cfgold) {
-      $list[] = "$vtun: peer $id (".($peer[1][0]=='#' ? substr($peer[1],1) : '').')';
+      $list[] = "$vtun: peer $id (".($peer[1][0]=='#' ? substr($peer[1],1) : _('no name')).')';
       file_put_contents($cfg,$cfgnew);
       $png = str_replace('.conf','.png',$cfg);
       exec("qrencode -t PNG -r $cfg -o $png");
@@ -241,6 +243,7 @@ case 'presharedkey':
   echo exec("wg genpsk");
   break;
 case 'update':
+file_put_contents('/tmp/test',print_r($_SESSION,true));
   if (!exec("iptables -S|grep -om1 'WIREGUARD$'")) {
     exec("iptables -N WIREGUARD;iptables -A FORWARD -j WIREGUARD");
   }
