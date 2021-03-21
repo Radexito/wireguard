@@ -1019,9 +1019,9 @@ statistics.on('message', function(data) {
   }
   // update inactive tunnels
   for (var i=0,vtun; vtun=list[i]; i++) {
-    $('span[class^="hs-'+vtun+'"]').each(function(){$(this).text("_(tunnel is inactive)_");});
-    $('span[class^="tx-'+vtun+'"]').each(function(){$(this).text('---');});
-    $('span[class^="rx-'+vtun+'"]').each(function(){$(this).text('---');});
+    $('span[class^="hs-'+vtun+'"]').text("_(tunnel is inactive)_");
+    $('span[class^="tx-'+vtun+'"]').text('---');
+    $('span[class^="rx-'+vtun+'"]').text('---');
   }
 });
 
