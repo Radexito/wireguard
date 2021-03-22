@@ -166,7 +166,7 @@ function parseInput(&$input,&$x) {
       break;
     case 'DNS':
       if ($i>0 && $value) {
-        $user[] = "$id:0=\"$value\"";
+        $user[] = "$id:$x=\"$value\"";
         $var['dns'] = "$id=$value";
       } else $var['dns'] = false;
       break;
