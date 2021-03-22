@@ -243,7 +243,6 @@ case 'presharedkey':
   echo exec("wg genpsk");
   break;
 case 'update':
-file_put_contents('/tmp/test',print_r($_SESSION,true));
   if (!exec("iptables -S|grep -om1 'WIREGUARD$'")) {
     exec("iptables -N WIREGUARD;iptables -A FORWARD -j WIREGUARD");
   }
