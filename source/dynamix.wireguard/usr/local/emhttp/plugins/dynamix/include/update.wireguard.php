@@ -135,7 +135,7 @@ function parseInput(&$input,&$x) {
     [$id,$i] = explode(':',$key);
     if ($i != $section) {
       $conf[] = "\n[Peer]";
-      // special execution for first section only
+      // add peers only for peer sections
       $addPeer ? addPeer($x) : $addPeer = true;
       $section = $i;
     }
