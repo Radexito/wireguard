@@ -290,8 +290,8 @@ case 'ping':
   break;
 case 'public':
   $ip = $_POST['#ip'];
-  $v4 = $_POST['#prot']=='' || $_POST['#prot']=='46';
-  $v6 = $_POST['#prot']=='6' || $_POST['#prot']=='46';
+  $v4 = $_POST['#prot']!='6';
+  $v6 = $_POST['#prot']!='';
   $context = stream_context_create(['https'=>['timeout'=>12]]);
   $int_ipv4 = $v4 ? (preg_match("/^$validIP4$/", $ip) ? $ip : (@dns_get_record($ip, DNS_A)[0]['ip'] ?: '')) : '';
   $ext_ipv4 = $v4 ? (@file_get_contents('https://api.ipify.org',false,$context) ?: '') : '';
