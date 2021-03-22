@@ -226,7 +226,7 @@ function parseInput(&$input,&$x) {
       $var['presharedKey'] = $value ? "$id=$value" : false;
       break;
     default:
-      if ($value && $id[0]!='#') $conf[] = "$id=$value";
+      if ($value) $conf[] = "$id=$value";
       break;
     }
   }
