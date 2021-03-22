@@ -129,7 +129,7 @@ function createPeerFiles($vtun) {
 }
 function parseInput(&$input,&$x) {
   global $conf,$user,$var,$default,$default6;
-  $section = 0; $addPeer = false;
+  $section = 0; $x = 1; $addPeer = false;
   foreach ($input as $key => $value) {
     if ($key[0]=='#') continue;
     [$id,$i] = explode(':',$key);
@@ -261,7 +261,6 @@ case 'update':
   $var['shared1']  = "AllowedIPs=".implode(', ',(array_unique(explode(', ',$_POST['#shared1']))));
   $var['shared2']  = "AllowedIPs=".implode(', ',(array_unique(explode(', ',$_POST['#shared2']))));
   $var['internet'] = "Endpoint=".implode(', ',(array_unique(explode(', ',$_POST['#internet']))));
-  $x = 1;
   parseInput($_POST,$x);
   addPeer($x);
   exec("wg-quick down $vtun 2>/dev/null");
@@ -356,7 +355,6 @@ case 'import':
   }
   foreach ($import as $key => $val) $sort[] = explode(':',$key)[1];
   array_multisort($sort,$import);
-  $x = 1;
   $conf = ['[Interface]'];
   $var['default'] = $import['PROT:0']=='' ? "AllowedIPs=$default" : "AllowedIPs=$default6";
   $var['internet'] = "Endpoint=unknown";
