@@ -19,10 +19,10 @@ $etc = '/etc/wireguard';
 $tmp = '/tmp/list.tmp';
 
 unset($subnets,$hosts,$subnets6,$hosts6,$vtuns);
-exec("ip -4 route|grep -Po '^[^d].+dev (eth|br|bond)[0-9]'|cut -d' ' -f1",$subnets);
-exec("ip -4 addr|awk '/inet.* (eth|br|bond)[0-9]+/{print $2}'|cut -d'/' -f1",$hosts);
-exec("ip -6 route|grep -Po '^[^dfm].+dev (eth|br|bond)[0-9] '|cut -d' ' -f1",$subnets6);
-exec("ip -6 addr|awk '/inet6.* global $/{print $2}'|cut -d'/' -f1",$hosts6);
+exec("ip -4 route show|grep -Po '^[^d].+dev (eth|br|bond)[0-9]'|cut -d' ' -f1",$subnets);
+exec("ip -4 addr show|awk '/inet.* (eth|br|bond)[0-9]+/{print $2}'|cut -d'/' -f1",$hosts);
+exec("ip -6 route show|grep -Po '^[^dfm].+dev (eth|br|bond)[0-9] '|cut -d' ' -f1",$subnets6);
+exec("ip -6 addr show noprefixroute|awk '/inet6 /{print $2}'|cut -d'/' -f1",$hosts6);
 exec("ls --indicator-style=none $etc/wg*.conf*|grep -Po wg[0-9]+",$vtuns);
 
 $subnets = implode(', ',$subnets);
