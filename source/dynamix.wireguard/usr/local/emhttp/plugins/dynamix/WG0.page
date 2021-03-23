@@ -720,18 +720,24 @@ function setPool(form,vtun) {
   var network = form.find('input[name="gui:Network:0"]').val();
   var mask = form.find('select[name="gui:Mask:0"]').val()||24;
   var networkSubnet = network.ip2long() & (0x100000000-2**(32-mask));
-  if (network.ip2long() !== networkSubnet) {
+  if (network && network.ip2long() !== networkSubnet) {
     network = networkSubnet.long2ip();
     form.find('input[name="gui:Network:0"]').val(network);
   }
   // ensure Local tunnel network pool is not already in use on this server
   var subnets = '<?=$subnets?>';
-  if (subnets.includes(network+"/")) {
+  if (network && subnets.includes(network+"/")) {
     field.setCustomValidity("_(The Local tunnel network pool cannot be in)_ "+subnets);
     field.reportValidity();
     return false;
   }
-  // update existing addresses with pool address
+  // remove existing IPv4 addresses in AllowedIP list
+  form.find('input[name^="AllowedIPs:"]').each(function(){
+    var list = $(this).val().replace(/ +/g,'').split(',');
+    list = list.filter(ipv6);
+    $(this).val(list.join(', '));
+  });
+  // update existing IPv4 addresses with new pool address
   netbase[vtun] = (network||netpool[vtun]).ip2long() & (0x100000000-2**(32-mask));
   var assign = netbase[vtun];
   form.find('input[name^="Address:"]').each(function(){
@@ -765,7 +771,13 @@ function setPool6(form,vtun) {
     field.reportValidity();
     return false;
   }
-  // update existing addresses with pool address
+  // remove existing IPv6 addresses in AllowedIP list
+  form.find('input[name^="AllowedIPs:"]').each(function(){
+    var list = $(this).val().replace(/ +/g,'').split(',');
+    list = list.filter(ipv4);
+    $(this).val(list.join(', '));
+  });
+  // update existing IPv6 addresses with new pool address
   netbase6[vtun] = network6||netpool6[vtun];
   var assign = 0;
   form.find('input[name^="Address6:"]').each(function(){
@@ -782,7 +794,7 @@ function verifyInSubnet(field) {
   var form = $(field).parents('form');
   // note: if network or mask are invalid, subnet calculation will be unpredictable
   // not going to validate them here as the UI would be confusing
-  var network = form.find('input[name="gui:Network:0"]').val();
+  var network = form.find('input[name="gui:Network:0"]').val()||form.find('input[name="gui:Network:0"]').prop('placeholder');
   var mask = form.find('input[name="gui:Mask:0"]').val()||24;
   var addr = $(field).val();
   var networkSubnet = network.ip2long() & (0x100000000-2**(32-mask));
