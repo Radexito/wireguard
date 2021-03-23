@@ -188,14 +188,14 @@ foreach ($vtuns as $wgX) {
 @media(max-width:1680px){dt{width:25%}}
 span.even{float:right;display:inline-block;width:150px;margin-top:3px}
 span.even.wide{width:200px}
-span.pin{float:right;margin:-28px 12px 0 0;clear:both}
-span.pin.next{margin-top:-48px}
+span.pin{float:right;margin:-40px 12px 6px 0;clear:both}
 span[class^=rx]{margin-right:40px}
 span.hshift{margin-right:<?=$themes1?'-7':'11'?>px!important}
 span.vshift{margin-top:-2px!important}
 span.label{font-size:1.1rem;text-transform:uppercase;letter-spacing:1px;margin-left:<?=$themes1?'-12':'-4'?>px}
 span.input{display:inline-block;width:420px}
-span.access-type{display:inline-block;width:28%;white-space:normal}
+span.access-type{display:inline-block;width:30%;white-space:normal}
+@media(max-width:1920px){span.access-type{width:20%}}
 span.block{display:inline-block;width:43%;white-space:normal}
 div.shade-white{background-color:#ededed;margin-top:10px;padding:8px 0 3px 0}
 div.shade-black{background-color:#212121;margin-top:10px;padding:8px 0 3px 0}
@@ -1390,8 +1390,7 @@ _(Persistent keepalive)_:
 :wg_persistent_keepalive_help:
 
 </div>
-<span class="pin next">_(Data received)_: <span class="rx-wg0-<?=$i?>">0 B</span>_(Data sent)_: <span class="tx-wg0-<?=$i?>">0 B</span></span>
-<span class="pin">_(Last handshake)_: <span class="hs-wg0-<?=$i?>">_(unknown)_</span></span>
+<span class="pin">_(Data received)_: <span class="rx-wg0-<?=$i?>">0 B</span>_(Data sent)_: <span class="tx-wg0-<?=$i?>">0 B</span><br>_(Last handshake)_: <span class="hs-wg0-<?=$i?>">_(unknown)_</span></span>
 </div>
 <?endforeach;?>
 
