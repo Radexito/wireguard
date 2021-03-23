@@ -188,7 +188,7 @@ foreach ($vtuns as $wgX) {
 @media(max-width:1680px){dt{width:25%}}
 span.even{float:right;display:inline-block;width:150px;margin-top:3px}
 span.even.wide{width:200px}
-span.pin{float:right;margin:-40px 12px 6px 0;clear:both}
+span.pin{float:right;margin:-40px 12px 0 0;clear:both;display:inline-block;width:400px;text-align:right}
 span[class^=rx]{margin-right:40px}
 span.hshift{margin-right:<?=$themes1?'-7':'11'?>px!important}
 span.vshift{margin-top:-2px!important}
