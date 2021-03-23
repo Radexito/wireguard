@@ -757,7 +757,7 @@ function setPool6(form,vtun) {
   var network6 = form.find('input[name="gui:Network6:0"]').val();
   var mask6 = form.find('select[name="gui:Mask6:0"]').val()||64;
   // this logic only handles IPv6 mask of 64. for other masks, assume the user knows what they are doing.
-  if (mask6 === 64) {
+  if (network6 && mask6 === 64) {
     var network6Subnet = network6.match(/((.*?):){4}/) ? network6.match(/((.*?):){4}/)[0].slice(0,-1) : "";
     if (network6Subnet && network6 !== network6Subnet+"::") {
       network6 = network6Subnet+"::";
@@ -766,7 +766,7 @@ function setPool6(form,vtun) {
   }
   // ensure Local tunnel network pool is not already in use on this server
   var subnets6 = '<?=$subnets6?>';
-  if (subnets6.includes(network6+"/")) {
+  if (network6 && subnets6.includes(network6+"/")) {
     field.setCustomValidity("_(The Local tunnel network pool IPv6 cannot be in)_ "+subnets6);
     field.reportValidity();
     return false;
