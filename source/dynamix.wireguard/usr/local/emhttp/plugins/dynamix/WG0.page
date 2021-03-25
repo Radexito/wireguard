@@ -185,7 +185,7 @@ foreach ($vtuns as $wgX) {
 ?>
 <link type="text/css" rel="stylesheet" href="<?autov('/webGui/styles/jquery.switchbutton.css')?>">
 <style>
-@media(max-width:1680px){dt{width:25%}}
+dt{width:22%}
 span.even{float:right;display:inline-block;width:150px;margin-top:3px}
 span.even.wide{width:200px}
 span.pin{float:right;margin:-40px 12px 0 0;clear:both;display:inline-block;width:400px;text-align:right}
@@ -194,9 +194,9 @@ span.hshift{margin-right:<?=$themes1?'-7':'11'?>px!important}
 span.vshift{margin-top:-2px!important}
 span.label{font-size:1.1rem;text-transform:uppercase;letter-spacing:1px;margin-left:<?=$themes1?'-12':'-4'?>px}
 span.input{display:inline-block;width:420px}
-span.access-type{display:inline-block;width:30%;white-space:normal}
+span.access-type{display:inline-block;width:35%;white-space:normal}
 @media(max-width:1920px){span.access-type{width:20%}}
-span.block{display:inline-block;width:43%;white-space:normal}
+span.block{display:inline-block;width:48%;white-space:normal}
 div.shade-white{background-color:#ededed;margin-top:10px;padding:8px 0 3px 0}
 div.shade-black{background-color:#212121;margin-top:10px;padding:8px 0 3px 0}
 div.shade-azure{background-color:#edeaef;margin-top:10px;padding:8px 0 3px 0}
@@ -1006,7 +1006,7 @@ function getPublicIP(ip,wg,protocol) {
   });
 }
 
-function sprintf() {
+function simplef() {
   var text = arguments[0];
   for (var i=1,arg; arg=arguments[i]; i++) text = text.replace('%s',arg);
   return text;
@@ -1036,7 +1036,7 @@ statistics.on('message', function(data) {
       var hr = parseInt(info[1]/3600);
       var mn = parseInt(info[1]/60%60);
       var sc = parseInt(info[1]%60);
-      $('.hs-'+vtun+'-'+x).text(sprintf("_(%s ago)_",plus(hr,"_(hour)_","_(hours)_",false)+plus(mn,"_(minute)_","_(minutes)_",false)+plus(sc,"_(second)_","_(seconds)_",true)));
+      $('.hs-'+vtun+'-'+x).text(simplef("_(%s ago)_",plus(hr,"_(hour)_","_(hours)_",false)+plus(mn,"_(minute)_","_(minutes)_",false)+plus(sc,"_(second)_","_(seconds)_",true)));
     } else {
       $('.hs-'+vtun+'-'+x).text("_(not received)_");
     }
