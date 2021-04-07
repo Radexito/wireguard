@@ -178,7 +178,7 @@ _(Local public key)_:
 </div>
 <div markdown="1" class="advanced wgX zone0" style="display:none">
 _(Network protocol)_:
-: <span class="input"><select id="protocol-wgX" name="PROT:0" size="1" class="subnet" onchange="setProtocol($(document.wgX),'wgX',true)">
+: <span class="input"><select id="protocol-wgX" name="PROT:0" class="subnet" onchange="setProtocol($(document.wgX),'wgX',true)">
   <?=mk_option($wgX['PROT:0'], "", _("IPv4 only"))?>
   <?=mk_option($wgX['PROT:0'], "6", _("IPv6 only"))?>
   <?=mk_option($wgX['PROT:0'], "46", _("IPv4 + IPv6"))?>
@@ -225,7 +225,7 @@ _(Local endpoint)_:
 
 <div markdown="1" class="advanced wgX zone0" style="display:none">
 _(Local server uses NAT)_:
-: <span class="input"><select name="NAT:0" size="1" class="narrow" onchange="showRoute($(document.wgX),'wgX',0)">
+: <span class="input"><select name="NAT:0" class="narrow" onchange="showRoute($(document.wgX),'wgX',0)">
   <?=mk_option($wgX['NAT:0'], "", _("Yes"))?>
   <?=mk_option($wgX['NAT:0'], "no", _("No"))?>
   </select></span>
@@ -235,7 +235,7 @@ _(Local server uses NAT)_:
 
 <div markdown="1" class="upnp wg0" style="display:none">
 _(Local gateway uses UPnP)_:
-: <span class="input"><select name="UPNP:0" size="1" class="narrow" onchange="showRemark($(document.wgX))">
+: <span class="input"><select name="UPNP:0" class="narrow" onchange="showRemark($(document.wgX))">
   <?=mk_option($wgX['UPNP:0'], "", _("Yes"))?>
   <?=mk_option($wgX['UPNP:0'], "no", _("No"))?>
   </select></span>
@@ -245,7 +245,7 @@ _(Local gateway uses UPnP)_:
 </div>
 _(Local tunnel firewall)_:
 : <span class="input"><input type="text" name="DROP:0" class="wide" value="<?=$wgX['DROP:0']?>" onchange="quickValidate(this);" pattern="<?=$validList?>" title="_(Comma separated list of IPv4 and IPv6 IP addresses)_, _(CIDR optional)_" placeholder="(_(optional)_)"></span>
-  _(Rule)_: <select name="RULE:0" size="1" class="auto">
+  _(Rule)_: <select name="RULE:0" class="auto">
   <?=mk_option($wgX['RULE:0'], "", _("Deny"))?>
   <?=mk_option($wgX['RULE:0'], "1", _("Allow"))?>
   </select>
@@ -286,7 +286,7 @@ _(Peer name)_:
 :wg_peer_name_help:
 
 _(Peer type of access)_:
-: <span class="input"><select name="TYPE:<?=$i?>" size="1" class="auto" onchange="updatePeer($(document.wgX),<?=$i?>,this.value,'wgX')">
+: <span class="input"><select name="TYPE:<?=$i?>" class="auto" onchange="updatePeer($(document.wgX),<?=$i?>,this.value,'wgX')">
   <?=mk_option($wgX["TYPE:$i"], "0", _("Remote access to server"))?>
   <?=mk_option($wgX["TYPE:$i"], "1", _("Remote access to LAN"))?>
   <?=mk_option($wgX["TYPE:$i"], "2", _("Server to server access"))?>
@@ -379,7 +379,7 @@ _(Peer name)_:
 :wg_peer_name_help:
 
 _(Peer type of access)_:
-: <span class="input"><select name="TYPE:INDEX" size="1" class="auto" onchange="updatePeer($(document.wgX),INDEX,this.value,'wgX')">
+: <span class="input"><select name="TYPE:INDEX" class="auto" onchange="updatePeer($(document.wgX),INDEX,this.value,'wgX')">
   <?=mk_option(0, "0", _("Remote access to server"))?>
   <?=mk_option(0, "1", _("Remote access to LAN"))?>
   <?=mk_option(0, "2", _("Server to server access"))?>
