@@ -18,12 +18,20 @@ Tag="icon-vpn"
 $etc = '/etc/wireguard';
 $tmp = '/tmp/list.tmp';
 
-unset($subnets,$hosts,$subnets6,$hosts6,$vtuns);
-exec("ip -4 route show|grep -Po '^[^d].+dev (eth|br|bond)[0-9]'|cut -d' ' -f1",$subnets);
-exec("ip -4 addr show|awk '/inet.* (eth|br|bond)[0-9]+/{print $2}'|cut -d'/' -f1",$hosts);
-exec("ip -6 route show|grep -Po '^[^dfm].+dev (eth|br|bond)[0-9] '|cut -d' ' -f1",$subnets6);
-exec("ip -6 addr show noprefixroute|awk '/inet6 /{print $2}'|cut -d'/' -f1",$hosts6);
-exec("ls --indicator-style=none $etc/wg*.conf*|grep -Po wg[0-9]+",$vtuns);
+unset($subnets,$hosts,$subnets6,$hosts6,$vtuns,$networks,$docker);
+exec("ip -4 route show scope link|awk '/^[^d].+ dev (eth|br|bond)[0-9]+/{print \$1}'",$subnets);
+exec("ip -4 addr show scope global|awk '/inet .+ (eth|br|bond)[0-9]+/{split(\$2,ip,\"/\");print ip[1]}'",$hosts);
+exec("ip -6 route show type unicast|grep -Pv 'expires|shim-'|awk '/^[^dfm:]/{print \$1}'",$subnets6);
+exec("ip -6 addr show scope global|grep -PA2 ': (eth|br|bond)\d+'|awk '/inet6 .+ (global|noprefixroute) \$/{split(\$2,ip,\"/\");print ip[1]}'",$hosts6);
+exec("ls  --indicator-style=none $etc/wg*.conf*|grep -Po wg[0-9]+",$vtuns);
+exec("docker network ls --filter driver='macvlan' --format='{{.Name}}'",$networks);
+
+// add subnets defined in Docker custom networks
+exec("docker network inspect --format='{{range .IPAM.Config}}{{println .Subnet}}{{end}}' ".implode(' ',$networks),$docker);
+foreach (array_filter($docker) as $network) {
+  if (strpos($network,'.')!==false && !in_array($network,$subnets)) $subnets[] = $network;
+  elseif (strpos($network,':')!==false && !in_array($network,$subnets6)) $subnets6[] = $network;
+}
 
 $subnets = implode(', ',$subnets);
 $hosts = implode(', ',$hosts);
@@ -48,7 +56,7 @@ function readConf(&$peer_wg,&$wg,$vtun) {
         case 'PostDown':
           break;
         case 'Address':
-          foreach (explode(', ',$data) as $ip) {
+          foreach (array_map('trim',explode(',',$data)) as $ip) {
             if (strpos($ip,'.')!==false) $wg["Address:$i"] = $ip;
             elseif (strpos($ip,':')!==false) $wg["Address6:$i"] = $ip;
           }
@@ -78,7 +86,7 @@ function readConf(&$peer_wg,&$wg,$vtun) {
       if ($id!='Address') continue;
       switch ($more['PROT:0']) {
       case '46':
-        [$ip4,$ip6] = explode(', ',$data);
+        [$ip4,$ip6] = array_map('trim',explode(',',$data));
         $more[$key] = $ip4;
         $more["Address6:$i"] = $ip6;
         break;
@@ -140,8 +148,8 @@ $validList = "^(($validIP4/?$maskIP4|$validIP6/?$maskIP6)(, *)?)+$";
 $validDNSServerList = "^(($validIP4|$validIP6)(, *)?)+$";
 $validname = "^[0-9a-zA-Z \-_]*$";
 
-$netbase    = $netpool = $netport = [];
-$netbase6   = $netpool6 = [];
+$netbase   = $netpool = $netport = [];
+$netbase6  = $netpool6 = [];
 $check_wg0 = in_array('wg0',$active) ? 'true' : 'false';
 $start_wg0 = in_array('wg0',$autostart);
 $peer_wg0  = $wg0 = [];
@@ -1057,6 +1065,7 @@ $(function(){
   ctrl += "<span class='even wide'><span class='status vshift label'>_(Autostart)_</span><span class='status vhshift'><input type='checkbox' id='start-wg0' style='display:none'<?=$start_wg0?' checked':''?>></span></span>";
   ctrl += "<span class='even'><span class='status vhshift'><input type='checkbox' id='view-wg0' style='display:none'></span></span>";
   ctrl += "<span class='even'><span class='status vhshift'><input type='checkbox' id='toggle-wg0' style='display:none'></span></span>";
+  statistics.start();
   getPublicIP($('#endpoint-wg0').val(),'wg0',$('#protocol-wg0').val());
   $('div.content').prepend('<div class="preset"><input type="button" value="_(Import Tunnel)_" onclick="$(&apos;input#file&apos;).trigger(&apos;click&apos;);"><input type="button" value="_(Add Tunnel)_" onclick="addTunnel()";<?=$this_wg0?"":" disabled"?>></div>');
   $('div#title').eq(0).find('span.left').append(ctrl);
@@ -1177,7 +1186,6 @@ $(function(){
   setTimeout(function(){swal({title:"_(Peer update required)_",text:"<b><u>_(List of peers)_</u></b><br><span style='display:inline-block;text-align:left'><?=file_get_contents($tmp)?></span>",type:'warning',html:true});},200);
 <?unlink($tmp);?>
 <?endif;?>
-  statistics.start();
 });
 </script>
 <input type='file' id='file' accept='.conf' onchange='importFile(this.files[0])' style='display:none'>
@@ -1220,7 +1228,7 @@ _(Local public key)_:
 </div>
 <div markdown="1" class="advanced wg0 zone0" style="display:none">
 _(Network protocol)_:
-: <span class="input"><select id="protocol-wg0" name="PROT:0" size="1" class="subnet" onchange="setProtocol($(document.wg0),'wg0',true)">
+: <span class="input"><select id="protocol-wg0" name="PROT:0" class="subnet" onchange="setProtocol($(document.wg0),'wg0',true)">
   <?=mk_option($wg0['PROT:0'], "", "_(IPv4 only)_")?>
   <?=mk_option($wg0['PROT:0'], "6", "_(IPv6 only)_")?>
   <?=mk_option($wg0['PROT:0'], "46", "_(IPv4 + IPv6)_")?>
@@ -1267,7 +1275,7 @@ _(Local endpoint)_:
 
 <div markdown="1" class="advanced wg0 zone0" style="display:none">
 _(Local server uses NAT)_:
-: <span class="input"><select name="NAT:0" size="1" class="narrow" onchange="showRoute($(document.wg0),'wg0',0)">
+: <span class="input"><select name="NAT:0" class="narrow" onchange="showRoute($(document.wg0),'wg0',0)">
   <?=mk_option($wg0['NAT:0'], "", _("Yes"))?>
   <?=mk_option($wg0['NAT:0'], "no", _("No"))?>
   </select></span>
@@ -1277,7 +1285,7 @@ _(Local server uses NAT)_:
 
 <div markdown="1" class="upnp wg0" style="display:none">
 _(Local gateway uses UPnP)_:
-: <span class="input"><select name="UPNP:0" size="1" class="narrow" onchange="showRemark($(document.wg0))">
+: <span class="input"><select name="UPNP:0" class="narrow" onchange="showRemark($(document.wg0))">
   <?=mk_option($wg0['UPNP:0'], "", _("Yes"))?>
   <?=mk_option($wg0['UPNP:0'], "no", _("No"))?>
   </select></span>
@@ -1287,7 +1295,7 @@ _(Local gateway uses UPnP)_:
 </div>
 _(Local tunnel firewall)_:
 : <span class="input"><input type="text" name="DROP:0" class="wide" value="<?=$wg0['DROP:0']?>" onchange="quickValidate(this);" pattern="<?=$validList?>" title="_(Comma separated list of IPv4 and IPv6 IP addresses)_, _(CIDR optional)_" placeholder="(_(optional)_)"></span>
-  _(Rule)_: <select name="RULE:0" size="1" class="auto">
+  _(Rule)_: <select name="RULE:0" class="auto">
   <?=mk_option($wg0['RULE:0'], "", _("Deny"))?>
   <?=mk_option($wg0['RULE:0'], "1", _("Allow"))?>
   </select>
@@ -1328,7 +1336,7 @@ _(Peer name)_:
 :wg_peer_name_help:
 
 _(Peer type of access)_:
-: <span class="input"><select name="TYPE:<?=$i?>" size="1" class="auto" onchange="updatePeer($(document.wg0),<?=$i?>,this.value,'wg0')">
+: <span class="input"><select name="TYPE:<?=$i?>" class="auto" onchange="updatePeer($(document.wg0),<?=$i?>,this.value,'wg0')">
   <?=mk_option($wg0["TYPE:$i"], "0", _("Remote access to server"))?>
   <?=mk_option($wg0["TYPE:$i"], "1", _("Remote access to LAN"))?>
   <?=mk_option($wg0["TYPE:$i"], "2", _("Server to server access"))?>
@@ -1421,7 +1429,7 @@ _(Peer name)_:
 :wg_peer_name_help:
 
 _(Peer type of access)_:
-: <span class="input"><select name="TYPE:INDEX" size="1" class="auto" onchange="updatePeer($(document.wg0),INDEX,this.value,'wg0')">
+: <span class="input"><select name="TYPE:INDEX" class="auto" onchange="updatePeer($(document.wg0),INDEX,this.value,'wg0')">
   <?=mk_option(0, "0", _("Remote access to server"))?>
   <?=mk_option(0, "1", _("Remote access to LAN"))?>
   <?=mk_option(0, "2", _("Server to server access"))?>
