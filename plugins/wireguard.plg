@@ -2,18 +2,22 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "wireguard">
 <!ENTITY launch    "Settings/VPNmanager">
-<!ENTITY author    "limetech modified by Radexito">
-<!ENTITY version   "Fri May 20 12:56:50 CEST 2022">
+<!ENTITY author    "Radexito">
+<!ENTITY version   "Fri May 20 13:04:30 CEST 2022">
 <!ENTITY github    "radexito/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
-<!ENTITY MD5       "9cc89a5a7c1a4d7f9b71c96c83115d07">
-<!ENTITY SHA256    "3d5bb20e5ccdc5f47e644ce5b36d4b92c891afb1dce263f41b4720ebe420fa0c">
+<!ENTITY MD5       "1b129cbd1b69e369ac4c253af29145d4">
+<!ENTITY SHA256    "f0aa3b5427a66a83a84b92d94dd91f7d7466d252f1006d1792274b22e393e594">
 
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-vpn" pluginURL="&pluginURL;" launch="&launch;" min="6.9.0" support="https://forums.unraid.net/topic/84229-dynamix-wireguard-vpn/?tab=comments#comment-780291">
   <CHANGES>
 ##&name;
+
+###2022.05.20
+- Removed unused options for access types
+- Added dual adding users with affix _work and _home
 
 ###2021.02.22
 - streamline validation functions
@@ -134,9 +138,9 @@ Dynamix WireGuard - Impatience is a virtue!
   <!-- README FILE -->
   <FILE Name="/usr/local/emhttp/plugins/&name;/README.md">
     <INLINE>
-**Dynamix WireGuard**
+**&author; WireGuard**
 
-This package contains GUI support for WireGuard.
+This package contains modifications by &author; 
 WireGuard allows to set up VPN tunnels for various requirements, such as remote server access or Internet over VPN.
 </INLINE>
   </FILE>
