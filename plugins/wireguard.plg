@@ -3,12 +3,12 @@
 <!ENTITY name      "wireguard">
 <!ENTITY launch    "Settings/VPNmanager">
 <!ENTITY author    "Radexito">
-<!ENTITY version   "Fri May 20 13:12:47 CEST 2022">
+<!ENTITY version   "2022.05.20">
 <!ENTITY github    "radexito/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
-<!ENTITY MD5       "7f2fe75de5041f7039aff40a74658265">
-<!ENTITY SHA256    "28e5f7384b436b2835422db65ce6b153f981ae914e905d7dd4891254b952986f">
+<!ENTITY MD5       "41753e9628edc8a3e30575914cbe3411">
+<!ENTITY SHA256    "ab688e5aa05e07d28ad89a5579f156406dfd536fc59c71359170337f1990bdac">
 
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-vpn" pluginURL="&pluginURL;" launch="&launch;" min="6.9.0" support="mailto:wysockiradek@gmail.com">
