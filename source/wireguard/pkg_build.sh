@@ -5,7 +5,7 @@ DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 MAINDIR=$(dirname "$(dirname "${DIR}")")
 tmpdir=/tmp/tmp.$((RANDOM * 19318203981230 + 40))
 plugin=$(basename "${DIR}")
-version=$(date +"%Y.%m.%d")$1
+version=$(date)$1
 plgfile="${MAINDIR}/plugins/${plugin}.plg"
 txzfile="${MAINDIR}/archive/${plugin}.txz"
 
