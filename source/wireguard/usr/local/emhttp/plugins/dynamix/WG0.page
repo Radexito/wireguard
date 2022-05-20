@@ -1337,14 +1337,9 @@ _(Peer name)_:
 
 _(Peer type of access)_:
 : <span class="input"><select name="TYPE:<?=$i?>" class="auto" onchange="updatePeer($(document.wg0),<?=$i?>,this.value,'wg0')">
-  <?=mk_option($wg0["TYPE:$i"], "0", _("Remote access to server"))?>
-  <?=mk_option($wg0["TYPE:$i"], "1", _("Remote access to LAN"))?>
-  <?=mk_option($wg0["TYPE:$i"], "2", _("Server to server access"))?>
-  <?=mk_option($wg0["TYPE:$i"], "3", _("LAN to LAN access"))?>
-  <?=mk_option($wg0["TYPE:$i"], "4", _("Server hub & spoke access"))?>
+  
   <?=mk_option($wg0["TYPE:$i"], "5", _("LAN hub & spoke access"))?>
-  <?=mk_option($wg0["TYPE:$i"], "6", _("Remote tunneled access"))?>
-  <?=mk_option($wg0["TYPE:$i"], "7", _("VPN tunneled access"),count($peer_wg0)==1?'':'disabled')?>
+  
   </select></span>
   <span id="access-type-<?=$i?>" class="access-type"></span>
 

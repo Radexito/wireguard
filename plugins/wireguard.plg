@@ -1,14 +1,14 @@
 <?xml version="1.0" standalone="yes"?>
 <!DOCTYPE PLUGIN [
-<!ENTITY name      "dynamix.wireguard">
+<!ENTITY name      "wireguard">
 <!ENTITY launch    "Settings/VPNmanager">
-<!ENTITY author    "limetech">
-<!ENTITY version   "2021.03.19a">
-<!ENTITY github    "unraid/&name;">
+<!ENTITY author    "limetech modified by Radexito">
+<!ENTITY version   "2022.05.20">
+<!ENTITY github    "radexito/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
-<!ENTITY MD5       "2c1729c27b2604e49d04e90399400064">
-<!ENTITY SHA256    "017f71bb6376afaf55fc591ca7393cebfcd7cfb4c5f5feb3a5eca20c624b94a1">
+<!ENTITY MD5       "d004c3b69e303b02f55ccff6d4936243">
+<!ENTITY SHA256    "3b66e6bcaaa1ec702e13c433cba596d3cad7ada6491562f7df9f5066f52eb245">
 
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-vpn" pluginURL="&pluginURL;" launch="&launch;" min="6.9.0" support="https://forums.unraid.net/topic/84229-dynamix-wireguard-vpn/?tab=comments#comment-780291">

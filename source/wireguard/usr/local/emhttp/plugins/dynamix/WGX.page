@@ -380,14 +380,8 @@ _(Peer name)_:
 
 _(Peer type of access)_:
 : <span class="input"><select name="TYPE:INDEX" class="auto" onchange="updatePeer($(document.wgX),INDEX,this.value,'wgX')">
-  <?=mk_option(0, "0", _("Remote access to server"))?>
-  <?=mk_option(0, "1", _("Remote access to LAN"))?>
-  <?=mk_option(0, "2", _("Server to server access"))?>
-  <?=mk_option(0, "3", _("LAN to LAN access"))?>
-  <?=mk_option(0, "4", _("Server hub & spoke access"))?>
+  
   <?=mk_option(0, "5", _("LAN hub & spoke access"))?>
-  <?=mk_option(0, "6", _("Remote tunneled access"))?>
-  <?=mk_option(0, "7", _("VPN tunneled access"),'disabled')?>
   </select></span>
   <span id="access-type-INDEX" class="access-type"></span>
 
