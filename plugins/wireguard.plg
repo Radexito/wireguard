@@ -7,8 +7,8 @@
 <!ENTITY github    "radexito/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
 <!ENTITY source    "/boot/config/plugins/&name;/&name;">
-<!ENTITY MD5       "d004c3b69e303b02f55ccff6d4936243">
-<!ENTITY SHA256    "3b66e6bcaaa1ec702e13c433cba596d3cad7ada6491562f7df9f5066f52eb245">
+<!ENTITY MD5       "ca3ec8a40bf2e8f45dcf0cd6823af91d">
+<!ENTITY SHA256    "af834c11cdb5fb675f14c72a4c7ca9dc339821ca4aed4514138af16982699ee4">
 
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-vpn" pluginURL="&pluginURL;" launch="&launch;" min="6.9.0" support="https://forums.unraid.net/topic/84229-dynamix-wireguard-vpn/?tab=comments#comment-780291">
