@@ -61,7 +61,17 @@ function addPeer(&$x) {
   if ($var['mtu']) $peers[$x][] = $var['mtu'];                   // MTU
   $peers[$x][] = '';
   $peers[$x][] = "[Peer]";                                       // [Peer]
-  if ($var['server']) $peers[$x][] = $var['server'];             // #name
+  if ($var['server']) $peers[$x][] = $var['server']."_work";             // #name
+  if ($var['handshake']) $peers[$x][] = $var['handshake'];       // PersistentKeepalive
+  if ($var['presharedKey']) $peers[$x][] = $var['presharedKey']; // PresharedKey
+  $peers[$x][] = $var['publicKey'];                              // PublicKey
+  if ($var['tunnel']) $peers[$x][] = $var['tunnel'];             // Tunnel address
+  $peers[$x][] = $var['endpoint'] ?: $var['internet'];           // Endpoint
+  $peers[$x][] = $var['allowedIPs'];                             // AllowedIPs
+  
+  $peers[$x][] = '';
+  $peers[$x][] = "[Peer]";                                       // [Peer]
+  if ($var['server']) $peers[$x][] = $var['server']."_home";             // #name
   if ($var['handshake']) $peers[$x][] = $var['handshake'];       // PersistentKeepalive
   if ($var['presharedKey']) $peers[$x][] = $var['presharedKey']; // PresharedKey
   $peers[$x][] = $var['publicKey'];                              // PublicKey
